@@ -13,20 +13,19 @@ function addCommas(num) {
   return decPart ? `${intPart}.${decPart}` : intPart;
 }
 
-// Function to format Bitcoin price with conditions
+// Function to format Bitcoin price
 function formatBTCPrice(price) {
-  // If the price is 1000 or more, show 1 decimal place, otherwise, show no decimals
+  // Show no decimal if the price is less than 1000, else show one decimal
   if (price >= 1000) {
-    return price.toFixed(1);  // One decimal if >= 1000
+    return price.toFixed(1); // One decimal if >= 1000
   } else {
-    return Math.floor(price).toString();  // No decimal for lower prices (rounded down)
+    return Math.floor(price).toString(); // No decimal for lower prices
   }
 }
 
-// Function to format Litecoin price
+// Function to format Litecoin price with two decimals
 function formatLTCPrice(price) {
-  // Always show 2 decimal places for Litecoin
-  return price.toFixed(2);
+  return price.toFixed(2); // Always show 2 decimal places for Litecoin
 }
 
 // Fetch prices and update the display
@@ -46,7 +45,7 @@ async function fetchPrices() {
     const btcPrice = parseFloat(btcData.data.amount); // Bitcoin price
 
     // Format prices
-    const formattedLtcPrice = formatLTCPrice(ltcPrice);  // Always 2 decimals for Litecoin
+    const formattedLtcPrice = formatLTCPrice(ltcPrice); // Always 2 decimals for Litecoin
     const formattedBtcPrice = formatBTCPrice(btcPrice); // 1 decimal for Bitcoin if >= 1000, else no decimals
 
     // Update LTC price (with 2 decimals and commas)
@@ -62,8 +61,8 @@ async function fetchPrices() {
     const ratio = Math.floor(btcPrice / ltcPrice); // Calculate ratio and round down
     ratioElement.textContent = `1:${ratio}`;
 
-    // Color changes for LTC price
-    const brightBlue = "#00A0FF"; // Brighter blue
+    // Color changes for LTC price (brighter blue when price increases)
+    const brightBlue = "#00A0FF"; // Brighter blue color
     if (lastLTCPrice !== null) {
       ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? brightBlue : "blue"; 
     }
