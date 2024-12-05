@@ -15,7 +15,7 @@ function addCommas(num) {
 
 // Function to format Bitcoin price with conditions
 function formatBTCPrice(price) {
-  // Bitcoin: If the price is 1000 or more, show 1 decimal place, otherwise, show as an integer
+  // Bitcoin: If the price is 1000 or more, show 1 decimal place, otherwise, show as an integer (no decimal)
   if (price >= 1000) {
     return price.toFixed(1);  // One decimal if >= 1000
   }
@@ -49,7 +49,7 @@ async function fetchPrices() {
 
     // Format prices
     const formattedLtcPrice = formatLTCPrice(ltcPrice);  // Always 2 decimals for Litecoin
-    const formattedBtcPrice = formatBTCPrice(btcPrice); // 1 decimal for Bitcoin if >= 1000
+    const formattedBtcPrice = formatBTCPrice(btcPrice); // 1 decimal for Bitcoin if >= 1000, else no decimals
 
     // Update LTC price (with 2 decimals and commas)
     const ltcPriceElement = document.getElementById("ltc-price");
