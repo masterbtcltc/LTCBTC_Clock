@@ -34,33 +34,33 @@ async function fetchPrices() {
     const btcPriceElement = document.getElementById("btc-price");
     const ratioElement = document.getElementById("ltc-btc-ratio");
 
-    ltcPriceElement.textContent = addCommas(formattedLtcPrice);
-    btcPriceElement.textContent = addCommas(formattedBtcPrice);
-
+    ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
+    btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
+    
     const ratio = Math.floor(btcPrice / ltcPrice);
-    ratioElement.textContent = `1:${ratio}`;
+    ratioElement.textContent = `1:${ratio} BTC:LTC`;
 
     // Check for price changes and set colors
     if (lastLTCPrice !== null) {
-      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF"; // Bright blue for decrease
+      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF"; // Yellow for increase, bright blue for decrease
     }
     lastLTCPrice = formattedLtcPrice;
 
     if (lastBTCPrice !== null) {
-      btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange";
+      btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange"; // Yellow for increase, orange for decrease
     }
     lastBTCPrice = formattedBtcPrice;
 
     if (lastRatio !== null) {
-      ratioElement.style.color = ratio > lastRatio ? "yellow" : "white";
+      ratioElement.style.color = ratio > lastRatio ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
     }
     lastRatio = ratio;
   } catch (error) {
     console.error("Error fetching prices:", error);
     
-    document.getElementById("ltc-price").textContent = "Error";
-    document.getElementById("btc-price").textContent = "Error";
-    document.getElementById("ltc-btc-ratio").textContent = "N/A";
+    document.getElementById("ltc-price").textContent = "Error LTC";
+    document.getElementById("btc-price").textContent = "Error BTC";
+    document.getElementById("ltc-btc-ratio").textContent = "N/A BTC:LTC";
 
     document.getElementById("ltc-price").style.color = "red";
     document.getElementById("btc-price").style.color = "red";
