@@ -17,14 +17,14 @@ async function fetchPrices() {
     const btcData = await btcResponse.json();
     const btcPrice = Math.round(parseFloat(btcData.data.amount)); // Round BTC price to nearest whole number
 
-    // Update LTC price
+    // Update LTC price (with 2 decimals)
     const ltcPriceElement = document.getElementById("ltc-price");
     ltcPriceElement.textContent = ltcPrice.toLocaleString("en-US", { 
       minimumFractionDigits: 2, 
       maximumFractionDigits: 2 
     }); // Display LTC price with 2 decimals
 
-    // Update BTC price
+    // Update BTC price (no decimals)
     const btcPriceElement = document.getElementById("btc-price");
     btcPriceElement.textContent = btcPrice.toString(); // Display BTC price as an integer string
 
