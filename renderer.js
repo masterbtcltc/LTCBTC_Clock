@@ -9,8 +9,19 @@ function addCommas(num) {
   let decPart = parts[1] || '';
   
   intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  
+
   return decPart ? `${intPart}.${decPart}` : intPart;
+}
+
+// Function to format the prices
+function formatPrice(price, isLTC) {
+  if (isLTC) {
+    // Litecoin: Always show 2 decimals
+    return parseFloat(price).toFixed(2);
+  } else {
+    // Bitcoin: Only add decimal if price is 1000 or more
+    return price >= 1000 ? parseFloat(price).toFixed(1) : Math.round(price).toString();
+  }
 }
 
 // Fetch prices and update the display
@@ -22,37 +33,41 @@ async function fetchPrices() {
     // Fetch Litecoin price
     const ltcResponse = await fetch(ltcApiURL);
     const ltcData = await ltcResponse.json();
-    const ltcPrice = parseFloat(ltcData.data.amount).toFixed(2); // Litecoin price with 2 decimals
+    const ltcPrice = parseFloat(ltcData.data.amount); // Litecoin price
 
     // Fetch Bitcoin price
     const btcResponse = await fetch(btcApiURL);
     const btcData = await btcResponse.json();
-    const btcPrice = Math.round(parseFloat(btcData.data.amount)).toString(); // Bitcoin price as integer
+    const btcPrice = parseFloat(btcData.data.amount); // Bitcoin price
+
+    // Format prices
+    const formattedLtcPrice = formatPrice(ltcPrice, true);  // Always 2 decimals for Litecoin
+    const formattedBtcPrice = formatPrice(btcPrice, false); // Only decimal if BTC >= 1000
 
     // Update LTC price (with 2 decimals and commas)
     const ltcPriceElement = document.getElementById("ltc-price");
-    ltcPriceElement.textContent = addCommas(ltcPrice);
+    ltcPriceElement.textContent = addCommas(formattedLtcPrice);
 
-    // Update BTC price (no decimals but with commas)
+    // Update BTC price (formatted with commas)
     const btcPriceElement = document.getElementById("btc-price");
-    btcPriceElement.textContent = addCommas(btcPrice);
+    btcPriceElement.textContent = addCommas(formattedBtcPrice);
 
     // Update ratio (rounded down to nearest whole number)
     const ratioElement = document.getElementById("ltc-btc-ratio");
-    const ratio = Math.floor(parseFloat(btcPrice) / parseFloat(ltcPrice)); // Calculate ratio and round down
+    const ratio = Math.floor(btcPrice / ltcPrice); // Calculate ratio and round down
     ratioElement.textContent = `1:${ratio}`;
 
     // Color changes for LTC price
     if (lastLTCPrice !== null) {
-      ltcPriceElement.style.color = parseFloat(ltcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "blue";
+      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "blue";
     }
-    lastLTCPrice = ltcPrice;
+    lastLTCPrice = formattedLtcPrice;
 
     // Color changes for BTC price
     if (lastBTCPrice !== null) {
-      btcPriceElement.style.color = parseFloat(btcPrice) > parseFloat(lastBTCPrice) ? "yellow" : "orange";
+      btcPriceElement.style.color = parseFloat(formattedBtcPrice) > parseFloat(lastBTCPrice) ? "yellow" : "orange";
     }
-    lastBTCPrice = btcPrice;
+    lastBTCPrice = formattedBtcPrice;
   } catch (error) {
     console.error("Error fetching prices:", error);
 
