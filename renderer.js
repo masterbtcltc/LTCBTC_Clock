@@ -13,14 +13,9 @@ function addCommas(num) {
   return decPart ? `${intPart}.${decPart}` : intPart;
 }
 
-// Function to format Bitcoin price
+// Function to format Bitcoin price with no decimals
 function formatBTCPrice(price) {
-  // Show no decimal if the price is less than 1000, else show one decimal
-  if (price >= 1000) {
-    return price.toFixed(1); // One decimal if >= 1000
-  } else {
-    return Math.floor(price).toString(); // No decimal for lower prices
-  }
+  return Math.floor(price).toString(); // Always no decimals for Bitcoin
 }
 
 // Function to format Litecoin price with two decimals
@@ -46,13 +41,13 @@ async function fetchPrices() {
 
     // Format prices
     const formattedLtcPrice = formatLTCPrice(ltcPrice); // Always 2 decimals for Litecoin
-    const formattedBtcPrice = formatBTCPrice(btcPrice); // 1 decimal for Bitcoin if >= 1000, else no decimals
+    const formattedBtcPrice = formatBTCPrice(btcPrice); // No decimals for Bitcoin
 
     // Update LTC price (with 2 decimals and commas)
     const ltcPriceElement = document.getElementById("ltc-price");
     ltcPriceElement.textContent = addCommas(formattedLtcPrice);
 
-    // Update BTC price (formatted with commas)
+    // Update BTC price (formatted with commas, no decimals)
     const btcPriceElement = document.getElementById("btc-price");
     btcPriceElement.textContent = addCommas(formattedBtcPrice);
 
@@ -70,7 +65,7 @@ async function fetchPrices() {
 
     // Color changes for BTC price
     if (lastBTCPrice !== null) {
-      btcPriceElement.style.color = parseFloat(formattedBtcPrice) > parseFloat(lastBTCPrice) ? "yellow" : "orange";
+      btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange";
     }
     lastBTCPrice = formattedBtcPrice;
   } catch (error) {
