@@ -63,8 +63,9 @@ async function fetchPrices() {
     ratioElement.textContent = `1:${ratio}`;
 
     // Color changes for LTC price
+    const brightBlue = "#00A0FF"; // Brighter blue
     if (lastLTCPrice !== null) {
-      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "#00A0FF" : "blue";  // Brighter blue
+      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? brightBlue : "blue"; 
     }
     lastLTCPrice = formattedLtcPrice;
 
