@@ -44,6 +44,9 @@ async function fetchPrices() {
     const btcData = await btcResponse.json();
     const btcPrice = parseFloat(btcData.data.amount); // Bitcoin price
 
+    console.log(`BTC Price: ${btcPrice}`);  // Debugging line
+    console.log(`LTC Price: ${ltcPrice}`);  // Debugging line
+
     // Format prices
     const formattedLtcPrice = formatLTCPrice(ltcPrice);  // Always 2 decimals for Litecoin
     const formattedBtcPrice = formatBTCPrice(btcPrice); // 1 decimal for Bitcoin if >= 1000
