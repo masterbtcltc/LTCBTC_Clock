@@ -1,11 +1,6 @@
 let lastLTCPrice = null; // Store the last LTC price to track changes
 let lastBTCPrice = null; // Store the last BTC price to track changes
 
-// Function to format numbers with commas
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
 // Fetch prices and update the display
 async function fetchPrices() {
   const ltcApiURL = "https://api.coinbase.com/v2/prices/LTC-USD/spot";
@@ -20,15 +15,15 @@ async function fetchPrices() {
     // Fetch Bitcoin price
     const btcResponse = await fetch(btcApiURL);
     const btcData = await btcResponse.json();
-    const btcPrice = parseFloat(btcData.data.amount); // Now keep as float for better precision
+    const btcPrice = parseFloat(btcData.data.amount); // Keep as float for precision
 
     // Update LTC price (with 2 decimals and commas)
     const ltcPriceElement = document.getElementById("ltc-price");
-    ltcPriceElement.textContent = numberWithCommas(ltcPrice.toFixed(2)); // Always show Litecoin with 2 decimals and commas
+    ltcPriceElement.textContent = ltcPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     // Update BTC price (rounded to no decimals but with commas)
     const btcPriceElement = document.getElementById("btc-price");
-    btcPriceElement.textContent = numberWithCommas(Math.round(btcPrice).toString()); // Display BTC price as an integer string with commas
+    btcPriceElement.textContent = Math.round(btcPrice).toLocaleString('en-US');
 
     // Update ratio (rounded down to nearest whole number)
     const ratioElement = document.getElementById("ltc-btc-ratio");
