@@ -19,11 +19,11 @@ async function fetchPrices() {
 
     // Update LTC price
     const ltcPriceElement = document.getElementById("ltc-price");
-    ltcPriceElement.textContent = ltcPrice.toLocaleString("en-US", { maximumFractionDigits: 0 });
+    ltcPriceElement.textContent = ltcPrice.toString(); // Display LTC price as an integer string
 
     // Update BTC price
     const btcPriceElement = document.getElementById("btc-price");
-    btcPriceElement.textContent = btcPrice.toLocaleString("en-US", { maximumFractionDigits: 0 });
+    btcPriceElement.textContent = btcPrice.toString(); // Display BTC price as an integer string
 
     // Update ratio (rounded down to nearest whole number)
     const ratioElement = document.getElementById("ltc-btc-ratio");
