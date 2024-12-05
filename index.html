@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LTC Clock</title>
+  <link rel="icon" href="/LTC-price-clock/icons/favicon.ico">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+    body {
+      margin: 0;
+      background-color: black;
+      font-family: 'Roboto', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+    }
+    #btc-price, #ltc-price, #ltc-btc-ratio {
+      font-size: 10vw; /* Adjusted for responsive design */
+      margin: 0;
+    }
+    #ltc-price {
+      color: #45C482; /* Default color for Litecoin price */
+    }
+    #ltc-btc-ratio {
+      font-size: 6vw; /* Smaller font size for ratio */
+      margin-top: 20px;
+      color: white; /* Default color for ratio */
+    }
+  </style>
+</head>
+<body>
+  <div id="btc-price">Loading BTC...</div>
+  <div id="ltc-price">Loading LTC...</div>
+  <div id="ltc-btc-ratio">Loading Ratio...</div>
+  <script src="renderer.js"></script>
+</body>
+</html>
