@@ -10,12 +10,12 @@ async function fetchPrices() {
     // Fetch Litecoin price
     const ltcResponse = await fetch(ltcApiURL);
     const ltcData = await ltcResponse.json();
-    const ltcPrice = Math.round(parseFloat(ltcData.data.amount));
+    const ltcPrice = Math.round(parseFloat(ltcData.data.amount)); // Round LTC price to nearest whole number
 
     // Fetch Bitcoin price
     const btcResponse = await fetch(btcApiURL);
     const btcData = await btcResponse.json();
-    const btcPrice = Math.round(parseFloat(btcData.data.amount));
+    const btcPrice = Math.round(parseFloat(btcData.data.amount)); // Round BTC price to nearest whole number
 
     // Update LTC price
     const ltcPriceElement = document.getElementById("ltc-price");
@@ -27,7 +27,7 @@ async function fetchPrices() {
 
     // Update ratio
     const ratioElement = document.getElementById("ltc-btc-ratio");
-    const ratio = Math.round(btcPrice / ltcPrice); // Calculate ratio and round to nearest whole number
+    const ratio = Math.floor(btcPrice / ltcPrice); // Calculate ratio and round down to the nearest whole number
     ratioElement.textContent = `1:${ratio}`;
 
     // Color changes for LTC price
