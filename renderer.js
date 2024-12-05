@@ -9,14 +9,17 @@ function addCommas(num) {
   let decPart = parts[1] || '';
   
   intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
+  
   return decPart ? `${intPart}.${decPart}` : intPart;
 }
 
 // Function to format Bitcoin price with conditions
 function formatBTCPrice(price) {
   // Bitcoin: If the price is 1000 or more, show 1 decimal place, otherwise, show as an integer
-  return price >= 1000 ? price.toFixed(1) : Math.round(price).toString();
+  if (price >= 1000) {
+    return price.toFixed(1);  // One decimal if >= 1000
+  }
+  return Math.round(price).toString();  // No decimal for lower prices
 }
 
 // Function to format Litecoin price
