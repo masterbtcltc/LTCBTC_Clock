@@ -1,5 +1,6 @@
 let lastLTCPrice = null; 
 let lastBTCPrice = null;
+let lastRatio = null;
 
 function addCommas(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -29,23 +30,31 @@ async function fetchPrices() {
     const formattedLtcPrice = formatLTCPrice(ltcPrice);
     const formattedBtcPrice = formatBTCPrice(btcPrice);
 
-    document.getElementById("ltc-price").textContent = addCommas(formattedLtcPrice);
-    document.getElementById("btc-price").textContent = addCommas(formattedBtcPrice);
+    const ltcPriceElement = document.getElementById("ltc-price");
+    const btcPriceElement = document.getElementById("btc-price");
+    const ratioElement = document.getElementById("ltc-btc-ratio");
+
+    ltcPriceElement.textContent = addCommas(formattedLtcPrice);
+    btcPriceElement.textContent = addCommas(formattedBtcPrice);
 
     const ratio = Math.floor(btcPrice / ltcPrice);
-    document.getElementById("ltc-btc-ratio").textContent = `1:${ratio}`;
+    ratioElement.textContent = `1:${ratio}`;
 
+    // Check for price changes and set colors
     if (lastLTCPrice !== null) {
-      const ltcPriceElement = document.getElementById("ltc-price");
-      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "#00A0FF" : "blue";
+      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF"; // Bright blue for decrease
     }
     lastLTCPrice = formattedLtcPrice;
 
     if (lastBTCPrice !== null) {
-      const btcPriceElement = document.getElementById("btc-price");
       btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange";
     }
     lastBTCPrice = formattedBtcPrice;
+
+    if (lastRatio !== null) {
+      ratioElement.style.color = ratio > lastRatio ? "yellow" : "white";
+    }
+    lastRatio = ratio;
   } catch (error) {
     console.error("Error fetching prices:", error);
     
