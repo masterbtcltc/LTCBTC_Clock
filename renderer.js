@@ -15,16 +15,17 @@ function addCommas(num) {
 
 // Function to format Bitcoin price with conditions
 function formatBTCPrice(price) {
-  // Bitcoin: If the price is 1000 or more, show 1 decimal place, otherwise, show as an integer (no decimal)
+  // If the price is 1000 or more, show 1 decimal place, otherwise, show no decimals
   if (price >= 1000) {
     return price.toFixed(1);  // One decimal if >= 1000
+  } else {
+    return Math.floor(price).toString();  // No decimal for lower prices (rounded down)
   }
-  return Math.floor(price).toString();  // No decimal for lower prices
 }
 
 // Function to format Litecoin price
 function formatLTCPrice(price) {
-  // Litecoin: Always show 2 decimal places
+  // Always show 2 decimal places for Litecoin
   return price.toFixed(2);
 }
 
@@ -43,9 +44,6 @@ async function fetchPrices() {
     const btcResponse = await fetch(btcApiURL);
     const btcData = await btcResponse.json();
     const btcPrice = parseFloat(btcData.data.amount); // Bitcoin price
-
-    console.log(`BTC Price: ${btcPrice}`);  // Debugging line
-    console.log(`LTC Price: ${ltcPrice}`);  // Debugging line
 
     // Format prices
     const formattedLtcPrice = formatLTCPrice(ltcPrice);  // Always 2 decimals for Litecoin
