@@ -19,7 +19,7 @@ function formatBTCPrice(price) {
   if (price >= 1000) {
     return price.toFixed(1);  // One decimal if >= 1000
   }
-  return Math.round(price).toString();  // No decimal for lower prices
+  return Math.floor(price).toString();  // No decimal for lower prices
 }
 
 // Function to format Litecoin price
@@ -66,7 +66,7 @@ async function fetchPrices() {
 
     // Color changes for LTC price
     if (lastLTCPrice !== null) {
-      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "blue";
+      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "#00A0FF" : "blue";  // Brighter blue
     }
     lastLTCPrice = formattedLtcPrice;
 
