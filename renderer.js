@@ -19,10 +19,7 @@ async function fetchPrices() {
 
     // Update LTC price (with 2 decimals)
     const ltcPriceElement = document.getElementById("ltc-price");
-    ltcPriceElement.textContent = ltcPrice.toLocaleString("en-US", { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 2 
-    }); // Display LTC price with 2 decimals
+    ltcPriceElement.textContent = ltcPrice.toFixed(2); // Always show Litecoin with 2 decimals
 
     // Update BTC price (no decimals)
     const btcPriceElement = document.getElementById("btc-price");
