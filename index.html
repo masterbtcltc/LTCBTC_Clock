@@ -4,28 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LTC and BTC Price Tracker</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="/LTC-price-clock/apple-touch-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/LTC-price-clock/icons/android-chrome-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/LTC-price-clock/icons/android-chrome-512x512.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/LTC-price-clock/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/LTC-price-clock/icons/favicon-16x16.png">
-  <link rel="manifest" href="/LTC-price-clock/manifest.json">
-  <link rel="mask-icon" href="/LTC-price-clock/icons/safari-pinned-tab.svg" color="#5bbad5">
-  <link rel="shortcut icon" href="/LTC-price-clock/icons/favicon.ico">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="msapplication-config" content="/LTC-price-clock/icons/browserconfig.xml">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S62SD2P54L"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-S62SD2P54L');
-  </script>
+  <!-- ... other meta tags, icons, and styles ... -->
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
@@ -39,11 +18,15 @@
       overflow: hidden;
       flex-direction: column;
       text-align: center;
+      display: flex; /* Added to make flexbox work */
     }
     #btc-price, #ltc-price, #ltc-btc-ratio {
       font-size: 10vw; /* Bigger font size */
       margin: 0;
       color: #45C482; /* Default color */
+      display: flex; /* Flex to align price and label */
+      justify-content: center; /* Center align items */
+      align-items: center; /* Center align vertically */
     }
     #btc-price {
       color: orange; /* Bitcoin price color */
@@ -57,22 +40,11 @@
   </style>
 </head>
 <body>
-  <div id="btc-price">Loading...</div>
-  <div id="ltc-price">Loading...</div>
-  <div id="ltc-btc-ratio">Loading...</div>
+  <div id="btc-price"></div>
+  <div id="ltc-price"></div>
+  <div id="ltc-btc-ratio"></div>
 
   <script src="renderer.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/LTC-price-clock/service-worker.js')
-        .then(registration => {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, error => {
-          console.log('ServiceWorker registration failed: ', error);
-        });
-      });
-    }
-  </script>
+  <!-- ... rest of your script tags ... -->
 </body>
 </html>
