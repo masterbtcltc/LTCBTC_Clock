@@ -10,31 +10,25 @@ async function fetchPrices() {
     // Fetch Litecoin price
     const ltcResponse = await fetch(ltcApiURL);
     const ltcData = await ltcResponse.json();
-    const ltcPrice = parseFloat(ltcData.data.amount);
+    const ltcPrice = Math.round(parseFloat(ltcData.data.amount));
 
     // Fetch Bitcoin price
     const btcResponse = await fetch(btcApiURL);
     const btcData = await btcResponse.json();
-    const btcPrice = parseFloat(btcData.data.amount);
+    const btcPrice = Math.round(parseFloat(btcData.data.amount));
 
     // Update LTC price
     const ltcPriceElement = document.getElementById("ltc-price");
-    ltcPriceElement.textContent = ltcPrice.toLocaleString("en-US", { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 2 
-    });
+    ltcPriceElement.textContent = ltcPrice.toLocaleString("en-US");
 
     // Update BTC price
     const btcPriceElement = document.getElementById("btc-price");
-    btcPriceElement.textContent = btcPrice.toLocaleString("en-US", { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 2 
-    });
+    btcPriceElement.textContent = btcPrice.toLocaleString("en-US");
 
     // Update ratio
     const ratioElement = document.getElementById("ltc-btc-ratio");
-    const ratio = (ltcPrice / btcPrice).toFixed(4); // Display ratio up to 4 decimal places
-    ratioElement.textContent = `1:${(1 / ratio).toFixed(2)}`;
+    const ratio = Math.round(btcPrice / ltcPrice); // Calculate ratio and round to nearest whole number
+    ratioElement.textContent = `1:${ratio}`;
 
     // Color changes for LTC price
     if (lastLTCPrice !== null) {
