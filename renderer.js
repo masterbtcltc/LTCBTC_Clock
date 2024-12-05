@@ -10,7 +10,7 @@ async function fetchPrices() {
     // Fetch Litecoin price
     const ltcResponse = await fetch(ltcApiURL);
     const ltcData = await ltcResponse.json();
-    const ltcPrice = Math.round(parseFloat(ltcData.data.amount)); // Round LTC price to nearest whole number
+    const ltcPrice = parseFloat(ltcData.data.amount).toFixed(2); // Litecoin price with 2 decimals
 
     // Fetch Bitcoin price
     const btcResponse = await fetch(btcApiURL);
@@ -19,7 +19,7 @@ async function fetchPrices() {
 
     // Update LTC price
     const ltcPriceElement = document.getElementById("ltc-price");
-    ltcPriceElement.textContent = ltcPrice.toString(); // Display LTC price as an integer string
+    ltcPriceElement.textContent = ltcPrice; // Display LTC price with decimals
 
     // Update BTC price
     const btcPriceElement = document.getElementById("btc-price");
