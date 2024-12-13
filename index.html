@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LTC and BTC Price Tracker</title>
-   <link rel="icon" href="favicon.png" type="image/png"> <!-- Favicon added -->
-  <!-- ... other meta tags, icons, and styles ... -->
-
+  <link rel="icon" href="favicon.png" type="image/png"> <!-- Favicon added -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
     body {
@@ -19,27 +17,25 @@
       overflow: hidden;
       flex-direction: column;
       text-align: center;
-      display: flex; /* Added to make flexbox work */
+      display: flex;
     }
     .price-line {
-      font-size: 10vw; /* Bigger font size */
+      font-size: 10vw;
       margin: 0;
-      color: #45C482; /* Default color */
-      display: flex; /* Flex to align price and label */
-      justify-content: center; /* Center align items */
-      align-items: center; /* Center align vertically */
+      color: #45C482;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #btc-price {
-      color: orange; /* Bitcoin price color */
+      color: orange;
     }
     #ltc-price {
-      color: #45C482; /* Litecoin price color */
+      color: #45C482;
     }
-    #btc-ltc-ratio {
-      color: #FF9900; /* Ratio color for BTC:LTC */
-    }
+    #btc-ltc-ratio,
     #ltc-btc-ratio {
-      color: #FF9900; /* Ratio color for LTC:BTC */
+      color: #FF9900;
     }
   </style>
 </head>
@@ -50,6 +46,5 @@
   <div id="ltc-btc-ratio" class="price-line">LTC:BTC</div>
 
   <script src="renderer.js"></script>
-  <!-- Include the script to fetch and display the prices -->
 </body>
 </html>
