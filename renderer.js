@@ -1,20 +1,25 @@
+// Variables to store the previous prices and ratios
 let lastLTCPrice = null;
 let lastBTCPrice = null;
 let lastRatioBTCtoLTC = null;
 let lastRatioLTCtoBTC = null;
 
+// Function to add commas to numbers
 function addCommas(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// Function to format Bitcoin price (no decimals)
 function formatBTCPrice(price) {
   return Math.round(price).toString(); // Ensure no decimals by rounding and converting to string
 }
 
+// Function to format Litecoin price (2 decimals)
 function formatLTCPrice(price) {
   return price.toFixed(2); // Always 2 decimals for Litecoin
 }
 
+// Fetch the latest prices from the Coinbase API
 async function fetchPrices() {
   const ltcApiURL = "https://api.coinbase.com/v2/prices/LTC-USD/spot";
   const btcApiURL = "https://api.coinbase.com/v2/prices/BTC-USD/spot";
@@ -80,5 +85,8 @@ async function fetchPrices() {
   }
 }
 
+// Set interval to fetch prices every second
 setInterval(fetchPrices, 1000);
+
+// Initial fetch
 fetchPrices();
