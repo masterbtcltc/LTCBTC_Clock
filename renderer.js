@@ -57,12 +57,12 @@ async function fetchPrices() {
     lastBTCPrice = formattedBtcPrice;
 
     if (lastRatioBTCtoLTC !== null) {
-      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "#00A0FF" : "yellow"; // Yellow for increase, white for decrease or no change
+      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "orange" : "#00A0FF"; // Yellow for increase, white for decrease or no change
     }
     lastRatioBTCtoLTC = btcToLtcRatio;
 
     if (lastRatioLTCtoBTC !== null) {
-      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatioLTCtoBTC ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
+      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatioLTCtoBTC ? "#00A0FF" : "orange"; // Yellow for increase, white for decrease or no change
     }
     lastRatioLTCtoBTC = ltcToBtcRatio;
   } catch (error) {
