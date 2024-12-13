@@ -32,15 +32,17 @@ async function fetchPrices() {
 
     const ltcPriceElement = document.getElementById("ltc-price");
     const btcPriceElement = document.getElementById("btc-price");
-    const ratioElement = document.getElementById("ltc-btc-ratio");
-    const reverseRatioElement = document.getElementById("ltc-btc-ratio-reverse");
+    const btcToLtcRatioElement = document.getElementById("btc-ltc-ratio");
+    const ltcToBtcRatioElement = document.getElementById("ltc-btc-ratio");
 
     ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
     btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
     
     const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(8); // Calculate LTC to BTC ratio
-    ratioElement.textContent = `1:${ltcToBtcRatio} BTC:LTC`;
-    reverseRatioElement.textContent = `${ltcToBtcRatio} LTC:BTC`;
+    const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(8); // Calculate BTC to LTC ratio
+
+    btcToLtcRatioElement.textContent = `1:${btcToLtcRatio} BTC:LTC`;
+    ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} LTC:BTC`;
 
     // Check for price changes and set colors
     if (lastLTCPrice !== null) {
@@ -54,21 +56,21 @@ async function fetchPrices() {
     lastBTCPrice = formattedBtcPrice;
 
     if (lastRatio !== null) {
-      ratioElement.style.color = ltcToBtcRatio > lastRatio ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
+      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatio ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
     }
-    lastRatio = ltcToBtcRatio;
+    lastRatio = btcToLtcRatio;
   } catch (error) {
     console.error("Error fetching prices:", error);
     
     document.getElementById("ltc-price").textContent = "Error LTC";
     document.getElementById("btc-price").textContent = "Error BTC";
-    document.getElementById("ltc-btc-ratio").textContent = "N/A BTC:LTC";
-    document.getElementById("ltc-btc-ratio-reverse").textContent = "N/A LTC:BTC";
+    document.getElementById("btc-ltc-ratio").textContent = "N/A BTC:LTC";
+    document.getElementById("ltc-btc-ratio").textContent = "N/A LTC:BTC";
 
     document.getElementById("ltc-price").style.color = "red";
     document.getElementById("btc-price").style.color = "red";
+    document.getElementById("btc-ltc-ratio").style.color = "red";
     document.getElementById("ltc-btc-ratio").style.color = "red";
-    document.getElementById("ltc-btc-ratio-reverse").style.color = "red";
   }
 }
 
