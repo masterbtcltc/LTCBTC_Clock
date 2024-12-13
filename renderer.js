@@ -72,10 +72,10 @@ async function fetchPrices() {
     document.getElementById("btc-ltc-ratio").textContent = "N/A BTC:LTC";
     document.getElementById("ltc-btc-ratio").textContent = "N/A LTC:BTC";
 
-    document.getElementById("ltc-price").style.color = "red";
-    document.getElementById("btc-price").style.color = "red";
-    document.getElementById("btc-ltc-ratio").style.color = "red";
-    document.getElementById("ltc-btc-ratio").style.color = "red";
+    document.getElementById("ltc-price").style.color = "white";
+    document.getElementById("btc-price").style.color = "white";
+    document.getElementById("btc-ltc-ratio").style.color = "white";
+    document.getElementById("ltc-btc-ratio").style.color = "white";
   }
 }
 
