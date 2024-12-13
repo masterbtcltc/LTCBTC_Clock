@@ -33,12 +33,14 @@ async function fetchPrices() {
     const ltcPriceElement = document.getElementById("ltc-price");
     const btcPriceElement = document.getElementById("btc-price");
     const ratioElement = document.getElementById("ltc-btc-ratio");
+    const reverseRatioElement = document.getElementById("ltc-btc-ratio-reverse");
 
     ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
     btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
     
     const ratio = Math.floor(btcPrice / ltcPrice);
     ratioElement.textContent = `1:${ratio} BTC:LTC`;
+    reverseRatioElement.textContent = `1:${1 / ratio} LTC:BTC`;
 
     // Check for price changes and set colors
     if (lastLTCPrice !== null) {
@@ -61,10 +63,12 @@ async function fetchPrices() {
     document.getElementById("ltc-price").textContent = "Error LTC";
     document.getElementById("btc-price").textContent = "Error BTC";
     document.getElementById("ltc-btc-ratio").textContent = "N/A BTC:LTC";
+    document.getElementById("ltc-btc-ratio-reverse").textContent = "N/A LTC:BTC";
 
     document.getElementById("ltc-price").style.color = "red";
     document.getElementById("btc-price").style.color = "red";
     document.getElementById("ltc-btc-ratio").style.color = "red";
+    document.getElementById("ltc-btc-ratio-reverse").style.color = "red";
   }
 }
 
