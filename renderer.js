@@ -1,6 +1,7 @@
 let lastLTCPrice = null;
 let lastBTCPrice = null;
-let lastRatio = null;
+let lastRatioBTCtoLTC = null;
+let lastRatioLTCtoBTC = null;
 
 function addCommas(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -38,8 +39,8 @@ async function fetchPrices() {
     ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
     btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
     
-    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(6); // Calculate LTC to BTC ratio with 6 decimals
-    const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(6); // Calculate BTC to LTC ratio with 6 decimals
+    const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(0); // Calculate BTC to LTC ratio with no decimals
+    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(0); // Calculate LTC to BTC ratio with no decimals
 
     btcToLtcRatioElement.textContent = `${btcToLtcRatio} BTC/LTC`;
     ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} LTC/BTC`;
@@ -55,15 +56,15 @@ async function fetchPrices() {
     }
     lastBTCPrice = formattedBtcPrice;
 
-    if (lastRatio !== null) {
-      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatio ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
+    if (lastRatioBTCtoLTC !== null) {
+      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
     }
-    lastRatio = btcToLtcRatio;
+    lastRatioBTCtoLTC = btcToLtcRatio;
 
-    if (lastRatio !== null) {
-      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatio ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
+    if (lastRatioLTCtoBTC !== null) {
+      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatioLTCtoBTC ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
     }
-    lastRatio = ltcToBtcRatio;
+    lastRatioLTCtoBTC = ltcToBtcRatio;
   } catch (error) {
     console.error("Error fetching prices:", error);
     
@@ -72,10 +73,10 @@ async function fetchPrices() {
     document.getElementById("btc-ltc-ratio").textContent = "N/A BTC:LTC";
     document.getElementById("ltc-btc-ratio").textContent = "N/A LTC:BTC";
 
-    document.getElementById("ltc-price").style.color = "white";
-    document.getElementById("btc-price").style.color = "white";
-    document.getElementById("btc-ltc-ratio").style.color = "white";
-    document.getElementById("ltc-btc-ratio").style.color = "white";
+    document.getElementById("ltc-price").style.color = "red";
+    document.getElementById("btc-price").style.color = "red";
+    document.getElementById("btc-ltc-ratio").style.color = "red";
+    document.getElementById("ltc-btc-ratio").style.color = "red";
   }
 }
 
