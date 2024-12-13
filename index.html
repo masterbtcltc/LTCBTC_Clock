@@ -21,7 +21,7 @@
       text-align: center;
       display: flex; /* Added to make flexbox work */
     }
-    #btc-price, #ltc-price, #ltc-btc-ratio {
+    .price-line {
       font-size: 10vw; /* Bigger font size */
       margin: 0;
       color: #45C482; /* Default color */
@@ -41,11 +41,12 @@
   </style>
 </head>
 <body>
-  <div id="btc-price"></div>
-  <div id="ltc-price"></div>
-  <div id="ltc-btc-ratio"></div>
+  <div id="btc-price" class="price-line">BTC</div>
+  <div id="ltc-price" class="price-line">LTC</div>
+  <div id="ltc-btc-ratio" class="price-line">BTC:LTC</div>
+  <div id="ltc-btc-ratio-reverse" class="price-line">LTC:BTC</div>
 
   <script src="renderer.js"></script>
-  <!-- ... rest of your script tags ... -->
+  <!-- Include the script to fetch and display the prices -->
 </body>
 </html>
