@@ -57,7 +57,7 @@ async function fetchPrices() {
     lastBTCPrice = formattedBtcPrice;
 
     if (lastRatioBTCtoLTC !== null) {
-      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
+      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "#00A0FF" : "yellow"; // Yellow for increase, white for decrease or no change
     }
     lastRatioBTCtoLTC = btcToLtcRatio;
 
