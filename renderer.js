@@ -38,7 +38,7 @@ async function fetchPrices() {
     ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
     btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
     
-    const ratio = (btcPrice / ltcPrice).toFixed(8); // Directly show the ratio
+    const ratio = (ltcPrice / btcPrice).toFixed(8); // Directly show the LTC:BTC ratio
     ratioElement.textContent = `${ratio} LTC:BTC`;
     reverseRatioElement.textContent = `${(1 / ratio).toFixed(8)} BTC:LTC`;
 
