@@ -40,7 +40,7 @@ async function fetchPrices() {
     
     const ratio = Math.floor(btcPrice / ltcPrice);
     ratioElement.textContent = `1:${ratio} BTC:LTC`;
-    reverseRatioElement.textContent = `1:${1 / ratio} LTC:BTC`;
+    reverseRatioElement.textContent = `1:${(1 / ratio).toFixed(8)} LTC:BTC`;
 
     // Check for price changes and set colors
     if (lastLTCPrice !== null) {
