@@ -64,8 +64,8 @@ async function fetchPrices() {
     
     document.getElementById("ltc-price").textContent = "Error LTC";
     document.getElementById("btc-price").textContent = "Error BTC";
-    document.getElementById("btc-ltc-ratio").textContent = "N/A BTC:LTC";
-    document.getElementById("ltc-btc-ratio").textContent = "N/A LTC:BTC";
+    document.getElementById("btc-ltc-ratio").textContent = "N/A BTC:LT";
+    document.getElementById("ltc-btc-ratio").textContent = "N/A LTC:BT";
 
     document.getElementById("ltc-price").style.color = "red";
     document.getElementById("btc-price").style.color = "red";
