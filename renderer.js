@@ -1,4 +1,4 @@
-let lastLTCPrice = null; 
+let lastLTCPrice = null;
 let lastBTCPrice = null;
 let lastRatio = null;
 
