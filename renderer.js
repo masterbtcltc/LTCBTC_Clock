@@ -38,29 +38,25 @@ async function fetchPrices() {
     ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
     btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
     
-    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(4); // Calculate LTC to BTC ratio with 6 decimals
-    const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(0); // 
+    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(6); // Calculate LTC to BTC ratio with 6 decimals
+    const btcToLtcRatio = (btcPrice / ltcPrice); // Calculate BTC to LTC ratio without decimals
 
-    // Calculate without decimals
-    const roundedBtcToLtcRatio = Math.round(btcPrice / ltcPrice);
-
-    btcToLtcRatioElement.textContent = `${roundedBtcToLtcRatio} BTC:LTC`;
-    ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} LTC:BTC`;
-
+    btcToLtcRatioElement.textContent = `${Math.round(btcToLtcRatio)} BTC/LTC`;
+    ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} LTC/BTC`;
 
     // Check for price changes and set colors
     if (lastLTCPrice !== null) {
-      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF";
+      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF"; // Yellow for increase, bright blue for decrease
     }
     lastLTCPrice = formattedLtcPrice;
 
     if (lastBTCPrice !== null) {
-      btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange";
+      btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange"; // Yellow for increase, orange for decrease
     }
     lastBTCPrice = formattedBtcPrice;
 
     if (lastRatio !== null) {
-      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatio ? "yellow" : "white";
+      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatio ? "yellow" : "white"; // Yellow for increase, white for decrease or no change
     }
     lastRatio = btcToLtcRatio;
   } catch (error) {
