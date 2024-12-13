@@ -45,8 +45,7 @@ async function fetchPrices() {
     btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
     
     const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(0); // Calculate BTC to LTC ratio with no decimals
-    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(6);  // show LTC/BTC with 6 decimals
-
+    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(6);  // Show LTC/BTC with 6 decimals
 
     btcToLtcRatioElement.textContent = `${btcToLtcRatio} BTC/LTC`;
     ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} LTC/BTC`;
