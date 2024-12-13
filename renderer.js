@@ -42,7 +42,7 @@ async function fetchPrices() {
     const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(8); // Calculate BTC to LTC ratio
 
     btcToLtcRatioElement.textContent = `1:${btcToLtcRatio} BTC:LTC`;
-    ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} LTC:BTC`;
+    ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} btc:BTC`;
 
     // Check for price changes and set colors
     if (lastLTCPrice !== null) {
