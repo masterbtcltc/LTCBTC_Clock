@@ -25,85 +25,68 @@ async function fetchPrices() {
   const btcApiURL = "https://api.coinbase.com/v2/prices/BTC-USD/spot";
 
   try {
-    // Fetch Litecoin and Bitcoin prices concurrently
-    const [ltcResponse, btcResponse] = await Promise.all([
-      fetch(ltcApiURL),
-      fetch(btcApiURL),
-    ]);
-
-    if (!ltcResponse.ok || !btcResponse.ok) throw new Error("API response not OK");
-
-    const [ltcData, btcData] = await Promise.all([
-      ltcResponse.json(),
-      btcResponse.json(),
-    ]);
-
+    const ltcResponse = await fetch(ltcApiURL);
+    const ltcData = await ltcResponse.json();
     const ltcPrice = parseFloat(ltcData.data.amount);
+
+    const btcResponse = await fetch(btcApiURL);
+    const btcData = await btcResponse.json();
     const btcPrice = parseFloat(btcData.data.amount);
 
-    // Format prices
     const formattedLtcPrice = formatLTCPrice(ltcPrice);
     const formattedBtcPrice = formatBTCPrice(btcPrice);
 
-    // Get DOM elements
     const ltcPriceElement = document.getElementById("ltc-price");
     const btcPriceElement = document.getElementById("btc-price");
     const btcToLtcRatioElement = document.getElementById("btc-ltc-ratio");
     const ltcToBtcRatioElement = document.getElementById("ltc-btc-ratio");
 
-    if (!ltcPriceElement || !btcPriceElement || !btcToLtcRatioElement || !ltcToBtcRatioElement) {
-      throw new Error("Missing DOM elements");
-    }
-
-    // Update DOM elements with prices
     ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
     btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
-
-    // Calculate and update ratios
-    const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(0);
-    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(6);
+    
+    const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(0); // Calculate BTC to LTC ratio with no decimals
+    const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(6);  // Show LTC/BTC with 6 decimals
 
     btcToLtcRatioElement.textContent = `${btcToLtcRatio} BTC/LTC`;
     ltcToBtcRatioElement.textContent = `${ltcToBtcRatio} LTC/BTC`;
 
-    // Check for price changes and update colors
+    // Check for price changes and set colors
     if (lastLTCPrice !== null) {
-      ltcPriceElement.style.color = ltcPrice > lastLTCPrice ? "yellow" : "#00A0FF";
+      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF"; // Yellow for increase, bright blue for decrease
     }
-    lastLTCPrice = ltcPrice;
+    lastLTCPrice = formattedLtcPrice;
 
     if (lastBTCPrice !== null) {
-      btcPriceElement.style.color = btcPrice > lastBTCPrice ? "yellow" : "orange";
+      btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange"; // Yellow for increase, orange for decrease
     }
-    lastBTCPrice = btcPrice;
+    lastBTCPrice = formattedBtcPrice;
 
     if (lastRatioBTCtoLTC !== null) {
-      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "orange" : "#00A0FF";
+      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "orange" : "#00A0FF"; // Orange for increase, Blue for decrease or no change
     }
     lastRatioBTCtoLTC = btcToLtcRatio;
 
     if (lastRatioLTCtoBTC !== null) {
-      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatioLTCtoBTC ? "#00A0FF" : "orange";
+      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatioLTCtoBTC ? "#00A0FF" : "orange"; // blue for increase, orange for decrease or no change
     }
     lastRatioLTCtoBTC = ltcToBtcRatio;
-
   } catch (error) {
-    console.error("Error fetching prices:", error.message);
+    console.error("Error fetching prices:", error);
+    
+    document.getElementById("ltc-price").textContent = "Error LTC";
+    document.getElementById("btc-price").textContent = "Error BTC";
+    document.getElementById("btc-ltc-ratio").textContent = "N/A BTC:LTC";
+    document.getElementById("ltc-btc-ratio").textContent = "N/A LTC:BTC";
 
-    // Handle errors by updating DOM with error messages and red color
-    const elements = ["ltc-price", "btc-price", "btc-ltc-ratio", "ltc-btc-ratio"];
-    elements.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.textContent = "Error";
-        el.style.color = "red";
-      }
-    });
+    document.getElementById("ltc-price").style.color = "red";
+    document.getElementById("btc-price").style.color = "red";
+    document.getElementById("btc-ltc-ratio").style.color = "red";
+    document.getElementById("ltc-btc-ratio").style.color = "red";
   }
 }
 
-// Set interval to fetch prices every 10 seconds
-setInterval(fetchPrices, 10000);
+// Set interval to fetch prices every second
+setInterval(fetchPrices, 1000);
 
 // Initial fetch
 fetchPrices();
