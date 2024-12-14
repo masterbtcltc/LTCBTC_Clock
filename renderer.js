@@ -4,19 +4,19 @@ let lastBTCPrice = null;
 let lastRatioBTCtoLTC = null;
 let lastRatioLTCtoBTC = null;
 
-// Function to add commas to numbers
+// Function to format numbers with commas
 function addCommas(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // Function to format Bitcoin price (no decimals)
 function formatBTCPrice(price) {
-  return Math.round(price).toString();
+  return Math.round(price).toString(); // Ensure no decimals by rounding and converting to string
 }
 
 // Function to format Litecoin price (2 decimals)
 function formatLTCPrice(price) {
-  return price.toFixed(2);
+  return price.toFixed(2); // Always 2 decimals for Litecoin
 }
 
 // Fetch the latest prices from the Coinbase API
@@ -25,38 +25,38 @@ async function fetchPrices() {
   const btcApiURL = "https://api.coinbase.com/v2/prices/BTC-USD/spot";
 
   try {
+    console.log("Fetching LTC and BTC prices...");
+
+    // Fetch data from both APIs concurrently
     const [ltcResponse, btcResponse] = await Promise.all([
       fetch(ltcApiURL),
       fetch(btcApiURL),
     ]);
 
     if (!ltcResponse.ok || !btcResponse.ok) {
-      throw new Error("API response not OK");
+      throw new Error("Failed to fetch data from the API.");
     }
 
     const ltcData = await ltcResponse.json();
     const btcData = await btcResponse.json();
 
+    // Extract prices
     const ltcPrice = parseFloat(ltcData.data.amount);
     const btcPrice = parseFloat(btcData.data.amount);
 
-    const formattedLtcPrice = formatLTCPrice(ltcPrice);
-    const formattedBtcPrice = formatBTCPrice(btcPrice);
+    console.log("LTC Price:", ltcPrice);
+    console.log("BTC Price:", btcPrice);
 
+    // Get DOM elements
     const ltcPriceElement = document.getElementById("ltc-price");
     const btcPriceElement = document.getElementById("btc-price");
     const btcToLtcRatioElement = document.getElementById("btc-ltc-ratio");
     const ltcToBtcRatioElement = document.getElementById("ltc-btc-ratio");
 
-    if (!ltcPriceElement || !btcPriceElement || !btcToLtcRatioElement || !ltcToBtcRatioElement) {
-      throw new Error("Missing DOM elements");
-    }
+    // Update prices and ratios
+    ltcPriceElement.textContent = `${addCommas(formatLTCPrice(ltcPrice))} LTC`;
+    btcPriceElement.textContent = `${addCommas(formatBTCPrice(btcPrice))} BTC`;
 
-    // Update prices
-    ltcPriceElement.textContent = `${addCommas(formattedLtcPrice)} LTC`;
-    btcPriceElement.textContent = `${addCommas(formattedBtcPrice)} BTC`;
-
-    // Calculate ratios
     const btcToLtcRatio = (btcPrice / ltcPrice).toFixed(0);
     const ltcToBtcRatio = (ltcPrice / btcPrice).toFixed(6);
 
@@ -86,9 +86,8 @@ async function fetchPrices() {
   } catch (error) {
     console.error("Error fetching prices:", error);
 
-    // Update DOM with error messages and colors
-    const elements = ["ltc-price", "btc-price", "btc-ltc-ratio", "ltc-btc-ratio"];
-    elements.forEach((id) => {
+    // Display error in UI
+    ["ltc-price", "btc-price", "btc-ltc-ratio", "ltc-btc-ratio"].forEach((id) => {
       const el = document.getElementById(id);
       if (el) {
         el.textContent = "Error";
@@ -98,8 +97,9 @@ async function fetchPrices() {
   }
 }
 
-// Fetch prices every second
-setInterval(fetchPrices, 1000);
-
-// Initial fetch
-fetchPrices();
+// Ensure the script runs after the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Fetch prices every 10 seconds
+  setInterval(fetchPrices, 10000);
+  fetchPrices();
+});
