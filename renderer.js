@@ -25,18 +25,20 @@ async function fetchPrices() {
   const btcApiURL = "https://api.coinbase.com/v2/prices/BTC-USD/spot";
 
   try {
-    // Fetch Litecoin price
-    const ltcResponse = await fetch(ltcApiURL);
-    if (!ltcResponse.ok) throw new Error("LTC API response not OK");
-    const ltcData = await ltcResponse.json();
-    if (!ltcData.data || !ltcData.data.amount) throw new Error("Invalid LTC API response");
-    const ltcPrice = parseFloat(ltcData.data.amount);
+    // Fetch Litecoin and Bitcoin prices concurrently
+    const [ltcResponse, btcResponse] = await Promise.all([
+      fetch(ltcApiURL),
+      fetch(btcApiURL),
+    ]);
 
-    // Fetch Bitcoin price
-    const btcResponse = await fetch(btcApiURL);
-    if (!btcResponse.ok) throw new Error("BTC API response not OK");
-    const btcData = await btcResponse.json();
-    if (!btcData.data || !btcData.data.amount) throw new Error("Invalid BTC API response");
+    if (!ltcResponse.ok || !btcResponse.ok) throw new Error("API response not OK");
+
+    const [ltcData, btcData] = await Promise.all([
+      ltcResponse.json(),
+      btcResponse.json(),
+    ]);
+
+    const ltcPrice = parseFloat(ltcData.data.amount);
     const btcPrice = parseFloat(btcData.data.amount);
 
     // Format prices
@@ -66,22 +68,22 @@ async function fetchPrices() {
 
     // Check for price changes and update colors
     if (lastLTCPrice !== null) {
-      ltcPriceElement.style.color = parseFloat(formattedLtcPrice) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF"; // Yellow for increase, bright blue for decrease
+      ltcPriceElement.style.color = ltcPrice > lastLTCPrice ? "yellow" : "#00A0FF";
     }
-    lastLTCPrice = formattedLtcPrice;
+    lastLTCPrice = ltcPrice;
 
     if (lastBTCPrice !== null) {
-      btcPriceElement.style.color = parseInt(formattedBtcPrice) > parseInt(lastBTCPrice) ? "yellow" : "orange"; // Yellow for increase, orange for decrease
+      btcPriceElement.style.color = btcPrice > lastBTCPrice ? "yellow" : "orange";
     }
-    lastBTCPrice = formattedBtcPrice;
+    lastBTCPrice = btcPrice;
 
     if (lastRatioBTCtoLTC !== null) {
-      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "orange" : "#00A0FF"; // Orange for increase, Blue for decrease or no change
+      btcToLtcRatioElement.style.color = btcToLtcRatio > lastRatioBTCtoLTC ? "orange" : "#00A0FF";
     }
     lastRatioBTCtoLTC = btcToLtcRatio;
 
     if (lastRatioLTCtoBTC !== null) {
-      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatioLTCtoBTC ? "#00A0FF" : "orange"; // Blue for increase, orange for decrease or no change
+      ltcToBtcRatioElement.style.color = ltcToBtcRatio > lastRatioLTCtoBTC ? "#00A0FF" : "orange";
     }
     lastRatioLTCtoBTC = ltcToBtcRatio;
 
@@ -89,21 +91,19 @@ async function fetchPrices() {
     console.error("Error fetching prices:", error.message);
 
     // Handle errors by updating DOM with error messages and red color
-    document.getElementById("ltc-price")?.textContent = "Error LTC";
-    document.getElementById("btc-price")?.textContent = "Error BTC";
-    document.getElementById("btc-ltc-ratio")?.textContent = "N/A BTC:LTC";
-    document.getElementById("ltc-btc-ratio")?.textContent = "N/A LTC:BTC";
-
     const elements = ["ltc-price", "btc-price", "btc-ltc-ratio", "ltc-btc-ratio"];
     elements.forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.style.color = "red";
+      if (el) {
+        el.textContent = "Error";
+        el.style.color = "red";
+      }
     });
   }
 }
 
-// Set interval to fetch prices every second
-setInterval(fetchPrices, 1000);
+// Set interval to fetch prices every 10 seconds
+setInterval(fetchPrices, 10000);
 
 // Initial fetch
 fetchPrices();
