@@ -3,6 +3,7 @@ let lastLTCPrice = null;
 let lastBTCPrice = null;
 let lastRatioBTCtoLTC = null;
 let lastRatioLTCtoBTC = null;
+let lastLuxxPrice = null;
 
 // Function to add commas to numbers
 function addCommas(num) {
@@ -23,6 +24,7 @@ function formatLTCPrice(price) {
 async function fetchPrices() {
   const ltcApiURL = "https://api.coinbase.com/v2/prices/LTC-USD/spot";
   const btcApiURL = "https://api.coinbase.com/v2/prices/BTC-USD/spot";
+  const luxxUrl = "https://thecse.com/listings/luxxfolio-holdings-inc/";
 
   try {
     const ltcResponse = await fetch(ltcApiURL);
@@ -82,6 +84,35 @@ async function fetchPrices() {
     document.getElementById("btc-price").style.color = "red";
     document.getElementById("btc-ltc-ratio").style.color = "red";
     document.getElementById("ltc-btc-ratio").style.color = "red";
+  }
+
+  // Separate try-catch for LUXX to not affect crypto fetches
+  try {
+    const response = await fetch(luxxUrl);
+    const text = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
+    const priceSpan = doc.querySelector('span.block.text-5xl.\\!leading-tight.text-blue-cse.sm\\:text-6xl.lg\\:text-5xl');
+    let luxxPrice = priceSpan ? parseFloat(priceSpan.textContent.trim()) : null;
+
+    if (luxxPrice === null) {
+      throw new Error("LUXX price not found");
+    }
+
+    const formattedLuxxPrice = luxxPrice.toFixed(2);
+    const luxxPriceElement = document.getElementById("luxx-price");
+    luxxPriceElement.textContent = `$${addCommas(formattedLuxxPrice)} LUXX`;
+
+    // Check for price changes and set colors (similar to LTC: yellow increase, blue decrease)
+    if (lastLuxxPrice !== null) {
+      luxxPriceElement.style.color = luxxPrice > lastLuxxPrice ? "yellow" : "#00A0FF";
+    }
+    lastLuxxPrice = luxxPrice;
+  } catch (error) {
+    console.error("Error fetching LUXX price:", error);
+    const luxxPriceElement = document.getElementById("luxx-price");
+    luxxPriceElement.textContent = "Error LUXX";
+    luxxPriceElement.style.color = "red";
   }
 }
 
