@@ -42,7 +42,7 @@ function formatETHPrice(price) {
   return Math.round(price).toString();
 }
 function formatDOGEPrice(price) {
-  return price.toFixed(4); // More precise but no commas added
+  return price.toFixed(4);
 }
 
 async function fetchPrices() {
@@ -92,7 +92,7 @@ async function fetchPrices() {
     ltcBtcElem.textContent = `${ratioLTCtoBTC} LTC/BTC`;
     ethLtcElem.textContent = `${ratioETHtoLTC} ETH/LTC`;
     ltcEthElem.textContent = `${ratioLTCtoETH} LTC/ETH`;
-    dogeLtcElem.textContent = `  ${ratioDOGEtoLTC} DOGE/LTC  `;
+    dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC`;
     ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTC/DOGE`;
 
     if (lastLTCPrice !== null) {
@@ -157,7 +157,7 @@ async function fetchPrices() {
       "eth-ltc-ratio",
       "ltc-eth-ratio",
       "doge-ltc-ratio",
-      "ltc-doge-ratio ",
+      "ltc-doge-ratio",
     ].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
