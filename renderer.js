@@ -84,7 +84,7 @@ async function fetchPrices() {
     const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
     const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
     const ratioETHtoLTC = (ethPrice / ltcPrice).toFixed(2);
-    const ratioLTCtoETH = (ltcPrice / ethPrice).toFixed(0);
+    const ratioLTCtoETH = (ltcPrice / ethPrice).toFixed(6);
     const ratioDOGEtoLTC = (dogePrice / ltcPrice).toFixed(8);
     const ratioLTCtoDOGE = (ltcPrice / dogePrice).toFixed(0);
 
