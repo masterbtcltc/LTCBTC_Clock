@@ -45,6 +45,19 @@ function formatDOGEPrice(price) {
   return price.toFixed(4);
 }
 
+function flashPrice(el, color) {
+  if (!el) return;
+  const originalColor = el.style.color;
+  const originalFontSize = window.getComputedStyle(el).fontSize;
+  el.style.color = color;
+  el.style.fontSize = '110px';
+  el.style.transition = 'color 0.5s ease, font-size 0.5s ease';
+  setTimeout(() => {
+    el.style.color = originalColor;
+    el.style.fontSize = originalFontSize;
+  }, 500);
+}
+
 async function fetchPrices() {
   try {
     const [ltcRes, btcRes, ethRes, dogeRes] = await Promise.all([
@@ -95,23 +108,40 @@ async function fetchPrices() {
     dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC`;
     ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTC/DOGE`;
 
+    // Update colors and flash if price changed significantly (>0.5%)
     if (lastLTCPrice !== null) {
-      ltcElem.style.color = parseFloat(ltcDisplay) > parseFloat(lastLTCPrice) ? LTC_UP_COLOR : LTC_DOWN_COLOR;
+      const ltcUp = parseFloat(ltcDisplay) > parseFloat(lastLTCPrice);
+      ltcElem.style.color = ltcUp ? LTC_UP_COLOR : LTC_DOWN_COLOR;
+      if (Math.abs(parseFloat(ltcDisplay) - parseFloat(lastLTCPrice)) / parseFloat(lastLTCPrice) > 0.005) {
+        flashPrice(ltcElem, ltcUp ? LTC_UP_COLOR : LTC_DOWN_COLOR);
+      }
     }
     lastLTCPrice = ltcDisplay;
 
     if (lastBTCPrice !== null) {
-      btcElem.style.color = parseInt(btcDisplay) > parseInt(lastBTCPrice) ? BTC_UP_COLOR : BTC_DOWN_COLOR;
+      const btcUp = parseInt(btcDisplay) > parseInt(lastBTCPrice);
+      btcElem.style.color = btcUp ? BTC_UP_COLOR : BTC_DOWN_COLOR;
+      if (Math.abs(parseInt(btcDisplay) - parseInt(lastBTCPrice)) / parseInt(lastBTCPrice) > 0.005) {
+        flashPrice(btcElem, btcUp ? BTC_UP_COLOR : BTC_DOWN_COLOR);
+      }
     }
     lastBTCPrice = btcDisplay;
 
     if (lastETHPrice !== null) {
-      ethElem.style.color = parseFloat(ethDisplay) > parseFloat(lastETHPrice) ? ETH_UP_COLOR : ETH_DOWN_COLOR;
+      const ethUp = parseFloat(ethDisplay) > parseFloat(lastETHPrice);
+      ethElem.style.color = ethUp ? ETH_UP_COLOR : ETH_DOWN_COLOR;
+      if (Math.abs(parseFloat(ethDisplay) - parseFloat(lastETHPrice)) / parseFloat(lastETHPrice) > 0.005) {
+        flashPrice(ethElem, ethUp ? ETH_UP_COLOR : ETH_DOWN_COLOR);
+      }
     }
     lastETHPrice = ethDisplay;
 
     if (lastDOGEPrice !== null) {
-      dogeElem.style.color = parseFloat(dogeDisplay) > parseFloat(lastDOGEPrice) ? DOGE_UP_COLOR : DOGE_DOWN_COLOR;
+      const dogeUp = parseFloat(dogeDisplay) > parseFloat(lastDOGEPrice);
+      dogeElem.style.color = dogeUp ? DOGE_UP_COLOR : DOGE_DOWN_COLOR;
+      if (Math.abs(parseFloat(dogeDisplay) - parseFloat(lastDOGEPrice)) / parseFloat(lastDOGEPrice) > 0.005) {
+        flashPrice(dogeElem, dogeUp ? DOGE_UP_COLOR : DOGE_DOWN_COLOR);
+      }
     }
     lastDOGEPrice = dogeDisplay;
 
@@ -167,6 +197,37 @@ async function fetchPrices() {
     });
   }
 }
+
+// Window resize font adjustment
+function adjustFontSize() {
+  const width = window.innerWidth;
+  const elems = document.querySelectorAll('.price-line');
+
+  elems.forEach(el => {
+    if (width < 500) {
+      el.style.fontSize = '40px';
+    } else if (width > 1200) {
+      el.style.fontSize = '120px';
+    } else {
+      el.style.fontSize = ''; // fallback to CSS clamp
+    }
+  });
+}
+
+window.addEventListener('resize', adjustFontSize);
+adjustFontSize();
+
+// Hover effects
+document.querySelectorAll('.price-line').forEach(el => {
+  el.style.transition = 'font-size 0.3s ease';
+
+  el.addEventListener('mouseenter', () => {
+    el.style.fontSize = '130px';
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.fontSize = ''; // revert to CSS size or adjusted size from resize
+  });
+});
 
 fetchPrices();
 setInterval(fetchPrices, 1000);
