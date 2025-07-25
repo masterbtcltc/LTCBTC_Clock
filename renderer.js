@@ -79,7 +79,7 @@ async function fetchPrices() {
     ltcElem.textContent = `${addCommas(ltcDisplay)} LTC`;
     btcElem.textContent = `${addCommas(btcDisplay)} BTC`;
     ethElem.textContent = `${addCommas(ethDisplay)} ETH`;
-    dogeElem.textContent = `${dogeDisplay} DOGE`;  // <-- no addCommas for DOGE to avoid comma issue
+    dogeElem.textContent = `${dogeDisplay} DOGE`;  // No addCommas here to avoid wrong comma placement
 
     const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
     const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
