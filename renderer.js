@@ -23,7 +23,9 @@ let lastRatioDOGEtoLTC = null;
 let lastRatioLTCtoDOGE = null;
 
 function addCommas(num) {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const parts = num.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
 }
 
 function formatBTCPrice(price) {
