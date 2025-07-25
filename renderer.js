@@ -1,49 +1,28 @@
 const BTC_UP_COLOR = "yellow";
 const BTC_DOWN_COLOR = "orange";
-
 const LTC_UP_COLOR = "yellow";
 const LTC_DOWN_COLOR = "#00A0FF";
-
 const ETH_UP_COLOR = "yellow";
 const ETH_DOWN_COLOR = "#00A0FF";
-
 const DOGE_UP_COLOR = "yellow";
 const DOGE_DOWN_COLOR = "#00A0FF";
 
-let lastLTCPrice = null;
-let lastBTCPrice = null;
-let lastETHPrice = null;
-let lastDOGEPrice = null;
-
-let lastRatioBTCtoLTC = null;
-let lastRatioLTCtoBTC = null;
-let lastRatioETHtoLTC = null;
-let lastRatioLTCtoETH = null;
-let lastRatioDOGEtoLTC = null;
-let lastRatioLTCtoDOGE = null;
+let lastLTCPrice = null, lastBTCPrice = null, lastETHPrice = null, lastDOGEPrice = null;
+let lastRatioBTCtoLTC = null, lastRatioLTCtoBTC = null;
+let lastRatioETHtoLTC = null, lastRatioLTCtoETH = null;
+let lastRatioDOGEtoLTC = null, lastRatioLTCtoDOGE = null;
 
 function addCommas(num) {
   const str = num.toString();
-  if (str.includes(".")) {
-    const [intPart, decPart] = str.split(".");
-    return intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + decPart;
-  } else {
-    return str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
+  return str.includes(".")
+    ? str.split(".")[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + str.split(".")[1]
+    : str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function formatBTCPrice(price) {
-  return Math.round(price).toString();
-}
-function formatLTCPrice(price) {
-  return price.toFixed(2);
-}
-function formatETHPrice(price) {
-  return Math.round(price).toString();
-}
-function formatDOGEPrice(price) {
-  return price.toFixed(4);
-}
+function formatBTCPrice(p) { return Math.round(p).toString(); }
+function formatLTCPrice(p) { return p.toFixed(2); }
+function formatETHPrice(p) { return Math.round(p).toString(); }
+function formatDOGEPrice(p) { return p.toFixed(4); }
 
 function flashPrice(el, color) {
   if (!el) return;
@@ -108,86 +87,46 @@ async function fetchPrices() {
     dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC`;
     ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTC/DOGE`;
 
-    // Update colors and flash if price changed significantly (>0.5%)
-    if (lastLTCPrice !== null) {
-      const ltcUp = parseFloat(ltcDisplay) > parseFloat(lastLTCPrice);
-      ltcElem.style.color = ltcUp ? LTC_UP_COLOR : LTC_DOWN_COLOR;
-      if (Math.abs(parseFloat(ltcDisplay) - parseFloat(lastLTCPrice)) / parseFloat(lastLTCPrice) > 0.005) {
-        flashPrice(ltcElem, ltcUp ? LTC_UP_COLOR : LTC_DOWN_COLOR);
+    function updateColor(elem, last, current, upColor, downColor) {
+      if (last !== null) {
+        const up = parseFloat(current) > parseFloat(last);
+        elem.style.color = up ? upColor : downColor;
+        if (Math.abs(current - last) / last > 0.005) {
+          flashPrice(elem, up ? upColor : downColor);
+        }
       }
     }
+
+    updateColor(ltcElem, lastLTCPrice, ltcDisplay, LTC_UP_COLOR, LTC_DOWN_COLOR);
+    updateColor(btcElem, lastBTCPrice, btcDisplay, BTC_UP_COLOR, BTC_DOWN_COLOR);
+    updateColor(ethElem, lastETHPrice, ethDisplay, ETH_UP_COLOR, ETH_DOWN_COLOR);
+    updateColor(dogeElem, lastDOGEPrice, dogeDisplay, DOGE_UP_COLOR, DOGE_DOWN_COLOR);
+
     lastLTCPrice = ltcDisplay;
-
-    if (lastBTCPrice !== null) {
-      const btcUp = parseInt(btcDisplay) > parseInt(lastBTCPrice);
-      btcElem.style.color = btcUp ? BTC_UP_COLOR : BTC_DOWN_COLOR;
-      if (Math.abs(parseInt(btcDisplay) - parseInt(lastBTCPrice)) / parseInt(lastBTCPrice) > 0.005) {
-        flashPrice(btcElem, btcUp ? BTC_UP_COLOR : BTC_DOWN_COLOR);
-      }
-    }
     lastBTCPrice = btcDisplay;
-
-    if (lastETHPrice !== null) {
-      const ethUp = parseFloat(ethDisplay) > parseFloat(lastETHPrice);
-      ethElem.style.color = ethUp ? ETH_UP_COLOR : ETH_DOWN_COLOR;
-      if (Math.abs(parseFloat(ethDisplay) - parseFloat(lastETHPrice)) / parseFloat(lastETHPrice) > 0.005) {
-        flashPrice(ethElem, ethUp ? ETH_UP_COLOR : ETH_DOWN_COLOR);
-      }
-    }
     lastETHPrice = ethDisplay;
-
-    if (lastDOGEPrice !== null) {
-      const dogeUp = parseFloat(dogeDisplay) > parseFloat(lastDOGEPrice);
-      dogeElem.style.color = dogeUp ? DOGE_UP_COLOR : DOGE_DOWN_COLOR;
-      if (Math.abs(parseFloat(dogeDisplay) - parseFloat(lastDOGEPrice)) / parseFloat(lastDOGEPrice) > 0.005) {
-        flashPrice(dogeElem, dogeUp ? DOGE_UP_COLOR : DOGE_DOWN_COLOR);
-      }
-    }
     lastDOGEPrice = dogeDisplay;
 
-    if (lastRatioBTCtoLTC !== null) {
-      btcLtcElem.style.color = ratioBTCtoLTC > lastRatioBTCtoLTC ? BTC_UP_COLOR : BTC_DOWN_COLOR;
-    }
+    btcLtcElem.style.color = ratioBTCtoLTC > lastRatioBTCtoLTC ? BTC_UP_COLOR : BTC_DOWN_COLOR;
+    ltcBtcElem.style.color = ratioLTCtoBTC > lastRatioLTCtoBTC ? LTC_UP_COLOR : LTC_DOWN_COLOR;
+    ethLtcElem.style.color = ratioETHtoLTC > lastRatioETHtoLTC ? ETH_UP_COLOR : ETH_DOWN_COLOR;
+    ltcEthElem.style.color = ratioLTCtoETH > lastRatioLTCtoETH ? LTC_UP_COLOR : LTC_DOWN_COLOR;
+    dogeLtcElem.style.color = ratioDOGEtoLTC > lastRatioDOGEtoLTC ? DOGE_UP_COLOR : DOGE_DOWN_COLOR;
+    ltcDogeElem.style.color = ratioLTCtoDOGE > lastRatioLTCtoDOGE ? LTC_UP_COLOR : LTC_DOWN_COLOR;
+
     lastRatioBTCtoLTC = ratioBTCtoLTC;
-
-    if (lastRatioLTCtoBTC !== null) {
-      ltcBtcElem.style.color = ratioLTCtoBTC > lastRatioLTCtoBTC ? LTC_UP_COLOR : LTC_DOWN_COLOR;
-    }
     lastRatioLTCtoBTC = ratioLTCtoBTC;
-
-    if (lastRatioETHtoLTC !== null) {
-      ethLtcElem.style.color = ratioETHtoLTC > lastRatioETHtoLTC ? ETH_UP_COLOR : ETH_DOWN_COLOR;
-    }
     lastRatioETHtoLTC = ratioETHtoLTC;
-
-    if (lastRatioLTCtoETH !== null) {
-      ltcEthElem.style.color = ratioLTCtoETH > lastRatioLTCtoETH ? LTC_UP_COLOR : LTC_DOWN_COLOR;
-    }
     lastRatioLTCtoETH = ratioLTCtoETH;
-
-    if (lastRatioDOGEtoLTC !== null) {
-      dogeLtcElem.style.color = ratioDOGEtoLTC > lastRatioDOGEtoLTC ? DOGE_UP_COLOR : DOGE_DOWN_COLOR;
-    }
     lastRatioDOGEtoLTC = ratioDOGEtoLTC;
-
-    if (lastRatioLTCtoDOGE !== null) {
-      ltcDogeElem.style.color = ratioLTCtoDOGE > lastRatioLTCtoDOGE ? LTC_UP_COLOR : LTC_DOWN_COLOR;
-    }
     lastRatioLTCtoDOGE = ratioLTCtoDOGE;
 
   } catch (error) {
     console.error("Error fetching prices:", error);
     [
-      "ltc-price",
-      "btc-price",
-      "eth-price",
-      "doge-price",
-      "btc-ltc-ratio",
-      "ltc-btc-ratio",
-      "eth-ltc-ratio",
-      "ltc-eth-ratio",
-      "doge-ltc-ratio",
-      "ltc-doge-ratio",
+      "ltc-price", "btc-price", "eth-price", "doge-price",
+      "btc-ltc-ratio", "ltc-btc-ratio", "eth-ltc-ratio",
+      "ltc-eth-ratio", "doge-ltc-ratio", "ltc-doge-ratio"
     ].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
@@ -198,18 +137,13 @@ async function fetchPrices() {
   }
 }
 
-// Window resize font adjustment
 function adjustFontSize() {
   const width = window.innerWidth;
-  const elems = document.querySelectorAll('.price-line');
-
-  elems.forEach(el => {
+  document.querySelectorAll('.price-line').forEach(el => {
     if (width < 500) {
       el.style.fontSize = '40px';
-    } else if (width > 1200) {
-      el.style.fontSize = '120px';
     } else {
-      el.style.fontSize = ''; // fallback to CSS clamp
+      el.style.fontSize = ''; // let CSS clamp handle it
     }
   });
 }
@@ -219,16 +153,13 @@ adjustFontSize();
 
 // Hover effects
 document.querySelectorAll('.price-line').forEach(el => {
-  el.style.transition = 'font-size 0.3s ease';
-
   el.addEventListener('mouseenter', () => {
-    el.style.fontSize = '160px';  // bigger than max clamp (120px) and hover size you had (130px)
+    el.classList.add('hovered');
   });
   el.addEventListener('mouseleave', () => {
-    el.style.fontSize = ''; // revert to CSS clamp or adjusted resize size
+    el.classList.remove('hovered');
   });
 });
-
 
 fetchPrices();
 setInterval(fetchPrices, 1000);
