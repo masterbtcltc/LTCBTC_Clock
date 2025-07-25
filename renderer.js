@@ -1,10 +1,11 @@
-// Price state
+// Previous variables...
 let lastLTCPrice = null;
 let lastBTCPrice = null;
+let lastETHPrice = null;
 let lastRatioBTCtoLTC = null;
 let lastRatioLTCtoBTC = null;
-let lastBTCD = null;
-let lastLTCD = null;
+let lastRatioETHtoLTC = null;
+let lastRatioLTCtoETH = null;
 
 function addCommas(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -18,106 +19,99 @@ function formatLTCPrice(price) {
   return price.toFixed(2);
 }
 
-// Fetch price data from Coinbase
+function formatETHPrice(price) {
+  return price.toFixed(2);
+}
+
 async function fetchPrices() {
   try {
-    const [ltcRes, btcRes] = await Promise.all([
+    const [ltcRes, btcRes, ethRes] = await Promise.all([
       fetch("https://api.coinbase.com/v2/prices/LTC-USD/spot"),
-      fetch("https://api.coinbase.com/v2/prices/BTC-USD/spot")
+      fetch("https://api.coinbase.com/v2/prices/BTC-USD/spot"),
+      fetch("https://api.coinbase.com/v2/prices/ETH-USD/spot")
     ]);
 
     const ltcPrice = parseFloat((await ltcRes.json()).data.amount);
     const btcPrice = parseFloat((await btcRes.json()).data.amount);
+    const ethPrice = parseFloat((await ethRes.json()).data.amount);
 
     const ltcDisplay = formatLTCPrice(ltcPrice);
     const btcDisplay = formatBTCPrice(btcPrice);
+    const ethDisplay = formatETHPrice(ethPrice);
 
+    // Elements
     const ltcElem = document.getElementById("ltc-price");
     const btcElem = document.getElementById("btc-price");
+    const ethElem = document.getElementById("eth-price");
     const btcLtcElem = document.getElementById("btc-ltc-ratio");
     const ltcBtcElem = document.getElementById("ltc-btc-ratio");
+    const ethLtcElem = document.getElementById("eth-ltc-ratio");
+    const ltcEthElem = document.getElementById("ltc-eth-ratio");
 
+    // Set price texts
     ltcElem.textContent = `${addCommas(ltcDisplay)} LTC`;
     btcElem.textContent = `${addCommas(btcDisplay)} BTC`;
+    ethElem.textContent = `${addCommas(ethDisplay)} ETH`;
 
+    // Ratios
     const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
     const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
+    const ratioETHtoLTC = (ethPrice / ltcPrice).toFixed(2);
+    const ratioLTCtoETH = (ltcPrice / ethPrice).toFixed(6);
 
     btcLtcElem.textContent = `${ratioBTCtoLTC} BTC/LTC`;
     ltcBtcElem.textContent = `${ratioLTCtoBTC} LTC/BTC`;
+    ethLtcElem.textContent = `${ratioETHtoLTC} ETH/LTC`;
+    ltcEthElem.textContent = `${ratioLTCtoETH} LTC/ETH`;
 
-    // Color transitions
+    // Color logic — BTC and LTC existing, add ETH
+
+    // LTC price color
     if (lastLTCPrice !== null) {
       ltcElem.style.color = parseFloat(ltcDisplay) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF";
     }
     lastLTCPrice = ltcDisplay;
 
+    // BTC price color
     if (lastBTCPrice !== null) {
       btcElem.style.color = parseInt(btcDisplay) > parseInt(lastBTCPrice) ? "yellow" : "orange";
     }
     lastBTCPrice = btcDisplay;
 
+    // ETH price color
+    if (lastETHPrice !== null) {
+      ethElem.style.color = parseFloat(ethDisplay) > parseFloat(lastETHPrice) ? "yellow" : "#9b59b6"; // purple-ish for ETH
+    }
+    lastETHPrice = ethDisplay;
+
+    // BTC/LTC ratio color
     if (lastRatioBTCtoLTC !== null) {
       btcLtcElem.style.color = ratioBTCtoLTC > lastRatioBTCtoLTC ? "orange" : "#00A0FF";
     }
     lastRatioBTCtoLTC = ratioBTCtoLTC;
 
+    // LTC/BTC ratio color
     if (lastRatioLTCtoBTC !== null) {
       ltcBtcElem.style.color = ratioLTCtoBTC > lastRatioLTCtoBTC ? "#00A0FF" : "orange";
     }
     lastRatioLTCtoBTC = ratioLTCtoBTC;
 
+    // ETH/LTC ratio color
+    if (lastRatioETHtoLTC !== null) {
+      ethLtcElem.style.color = ratioETHtoLTC > lastRatioETHtoLTC ? "yellow" : "#9b59b6";
+    }
+    lastRatioETHtoLTC = ratioETHtoLTC;
+
+    // LTC/ETH ratio color
+    if (lastRatioLTCtoETH !== null) {
+      ltcEthElem.style.color = ratioLTCtoETH > lastRatioLTCtoETH ? "#9b59b6" : "orange";
+    }
+    lastRatioLTCtoETH = ratioLTCtoETH;
+
   } catch (error) {
     console.error("Error fetching prices:", error);
-    document.getElementById("ltc-price").textContent = "Error LTC";
-    document.getElementById("btc-price").textContent = "Error BTC";
-    document.getElementById("btc-ltc-ratio").textContent = "N/A BTC:LTC";
-    document.getElementById("ltc-btc-ratio").textContent = "N/A LTC:BTC";
-
-    document.getElementById("ltc-price").style.color = "red";
-    document.getElementById("btc-price").style.color = "red";
-    document.getElementById("btc-ltc-ratio").style.color = "red";
-    document.getElementById("ltc-btc-ratio").style.color = "red";
   }
 }
 
-// Fetch BTC/LTC dominance from CoinGecko
-async function fetchDominance() {
-  try {
-    const response = await fetch("https://api.coingecko.com/api/v3/global");
-    const data = await response.json();
-
-    const btcD = data.data.market_cap_percentage.btc;
-    const ltcD = data.data.market_cap_percentage.ltc;
-
-    const btcElem = document.getElementById("btc-dominance");
-    const ltcElem = document.getElementById("ltc-dominance");
-
-    btcElem.textContent = `${btcD.toFixed(2)}% BTC Dominance`;
-    ltcElem.textContent = `${ltcD.toFixed(2)}% LTC Dominance`;
-
-    if (lastBTCD !== null) {
-      btcElem.style.color = btcD > lastBTCD ? "yellow" : "#f7931a";
-    }
-    lastBTCD = btcD;
-
-    if (lastLTCD !== null) {
-      ltcElem.style.color = ltcD > lastLTCD ? "yellow" : "#bebebe";
-    }
-    lastLTCD = ltcD;
-
-  } catch (error) {
-    console.error("Error fetching dominance:", error);
-    document.getElementById("btc-dominance").textContent = "Error BTC.D";
-    document.getElementById("ltc-dominance").textContent = "Error LTC.D";
-    document.getElementById("btc-dominance").style.color = "red";
-    document.getElementById("ltc-dominance").style.color = "red";
-  }
-}
-
-// Run fetches
 fetchPrices();
-fetchDominance();
-
-setInterval(fetchPrices, 1000);     // every second
-setInterval(fetchDominance, 60000); // every 60s
+setInterval(fetchPrices, 1000);
