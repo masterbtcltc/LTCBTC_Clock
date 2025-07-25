@@ -157,7 +157,7 @@ async function fetchPrices() {
       "eth-ltc-ratio",
       "ltc-eth-ratio",
       "doge-ltc-ratio",
-      "ltc-doge-ratio",
+      "ltc-doge-ratio ",
     ].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
