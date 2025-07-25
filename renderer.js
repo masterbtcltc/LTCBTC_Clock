@@ -92,7 +92,7 @@ async function fetchPrices() {
     ltcBtcElem.textContent = `${ratioLTCtoBTC} LTC/BTC`;
     ethLtcElem.textContent = `${ratioETHtoLTC} ETH/LTC`;
     ltcEthElem.textContent = `${ratioLTCtoETH} LTC/ETH`;
-    dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC`;
+    dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC  `;
     ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTC/DOGE`;
 
     if (lastLTCPrice !== null) {
