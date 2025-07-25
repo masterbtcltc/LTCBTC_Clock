@@ -17,24 +17,35 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
+      overflow-x: auto;
       text-align: center;
       min-width: 450px;
       min-height: 650px;
-      padding-left: 20px;   /* Add left padding */
-      padding-right: 20px;  /* Add right padding */
+      padding-left: 20px;
+      padding-right: 20px;
       box-sizing: border-box;
     }
 
+    #price-container {
+      max-width: 900px;
+      width: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .price-line {
-      font-size: 10vw;
+      font-size: clamp(24px, 10vw, 64px);
       margin: 10px 30px;
       color: #45C482;
       display: inline-flex;
       justify-content: center;
       align-items: center;
       white-space: nowrap;
-      flex-wrap: nowrap;
+      overflow-wrap: normal;
       min-width: 12ch;
     }
 
@@ -62,23 +73,25 @@
 
     #ltc-doge-ratio {
       color: #00A0FF;
-      margin-left: 30px;  
+      margin-left: 30px;
       margin-right: 30px;
     }
   </style>
 </head>
 <body>
-  <div id="btc-price" class="price-line">BTC</div>
-  <div id="ltc-price" class="price-line">LTC</div>
-  <div id="eth-price" class="price-line">ETH</div>
-  <div id="doge-price" class="price-line">DOGE</div>
+  <div id="price-container">
+    <div id="btc-price" class="price-line">BTC</div>
+    <div id="ltc-price" class="price-line">LTC</div>
+    <div id="eth-price" class="price-line">ETH</div>
+    <div id="doge-price" class="price-line">DOGE</div>
 
-  <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
-  <div id="ltc-btc-ratio" class="price-line">LTC/BTC</div>
-  <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
-  <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
-  <div id="doge-ltc-ratio" class="price-line">DOGE/LTC</div>
-  <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
+    <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
+    <div id="ltc-btc-ratio" class="price-line">LTC/BTC</div>
+    <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
+    <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
+    <div id="doge-ltc-ratio" class="price-line">DOGE/LTC</div>
+    <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
+  </div>
 
   <script src="renderer.js"></script>
 </body>
