@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LTC, BTC, ETH, and XRP Price Tracker</title>
+  <title>LTC, BTC, ETH, XRP Price & Dominance Tracker</title>
   <link rel="icon" href="favicon.png" type="image/png" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
@@ -29,18 +29,21 @@
     }
     #btc-price,
     #btc-ltc-ratio,
-    #btc-xrp-ratio {
+    #btc-xrp-ratio,
+    #btc-eth-ratio,
+    #btc-dominance {
       color: orange;
     }
     #ltc-price,
     #ltc-btc-ratio,
     #ltc-eth-ratio,
-    #ltc-xrp-ratio {
-      color: #45C482;
+    #ltc-xrp-ratio,
+    #ltc-dominance {
+      color: #00A0FF;
     }
     #eth-price,
     #eth-ltc-ratio {
-      color: #45C482;
+      color: #00A0FF;
     }
     #xrp-price,
     #xrp-ltc-ratio {
@@ -60,6 +63,9 @@
   <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
   <div id="xrp-ltc-ratio" class="price-line">XRP/LTC</div>
   <div id="ltc-xrp-ratio" class="price-line">LTC/XRP</div>
+
+  <div id="btc-dominance" class="price-line">BTC Dominance</div>
+  <div id="ltc-dominance" class="price-line">LTC Dominance</div>
 
   <script src="renderer.js"></script>
 </body>
