@@ -8,7 +8,6 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
-    /* Make box-sizing consistent */
     *, *::before, *::after {
       box-sizing: border-box;
     }
@@ -22,48 +21,50 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow-x: hidden; /* hide horizontal scrollbar */
+      overflow-x: hidden;
       text-align: center;
       min-width: 450px;
       min-height: 650px;
-      padding-left: 20px;
-      padding-right: 20px;
+      padding: 20px;
     }
 
-#price-container {
-  width: 90vw;       /* fill 90% of viewport width */
-  max-width: none;   /* remove max-width */
-  padding: 0 10px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    #price-container {
+      width: 90vw;
+      padding: 0 10px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.price-line {
-  font-size: clamp(80px, 14vw, 200px);
-  margin: 10px 0;      /* no horizontal margin */
-  padding: 0 10px;     /* add horizontal padding */
-  color: #45C482;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-  overflow-wrap: normal;
-  min-width: 12ch;
-  max-width: 100%;
-}
+    .price-line {
+      font-size: clamp(60px, 12vw, 160px);
+      margin: 10px 0;
+      padding: 0 10px;
+      color: #45C482;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      white-space: nowrap;
+      overflow-wrap: normal;
+      min-width: 12ch;
+      max-width: 100%;
+      transition: font-size 0.3s ease;
+    }
 
+    .price-line.hovered {
+      font-size: 160px !important;
+    }
 
     #btc-price,
-    #btc-ltc-ratio,
-    #btc-eth-ratio {
+    #btc-ltc-ratio {
       color: orange;
     }
 
     #ltc-price,
     #ltc-btc-ratio,
-    #ltc-eth-ratio {
+    #ltc-eth-ratio,
+    #ltc-doge-ratio {
       color: #00A0FF;
     }
 
@@ -78,30 +79,28 @@
     }
 
     #ltc-doge-ratio {
-      color: #00A0FF;
       margin-left: 15px;
       margin-right: 15px;
     }
   </style>
 </head>
 <body>
-<div id="price-container">
-  <div id="btc-price" class="price-line">BTC</div>
-  <div id="ltc-price" class="price-line">LTC</div>
-  <div id="eth-price" class="price-line">ETH</div>
-  <div id="doge-price" class="price-line">DOGE</div>
+  <div id="price-container">
+    <div id="btc-price" class="price-line">BTC</div>
+    <div id="ltc-price" class="price-line">LTC</div>
+    <div id="eth-price" class="price-line">ETH</div>
+    <div id="doge-price" class="price-line">DOGE</div>
 
-  <!-- Group 1: Ratios with LTC as denominator -->
-  <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
-  <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
-  <div id="doge-ltc-ratio" class="price-line">DOGE/LTC</div>
+    <!-- Group 1: LTC as denominator -->
+    <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
+    <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
+    <div id="doge-ltc-ratio" class="price-line">DOGE/LTC</div>
 
-  <!-- Group 2: Ratios with LTC as numerator -->
-  <div id="ltc-btc-ratio" class="price-line">LTC/BTC</div>
-  <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
-  <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
-</div>
-
+    <!-- Group 2: LTC as numerator -->
+    <div id="ltc-btc-ratio" class="price-line">LTC/BTC</div>
+    <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
+    <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
+  </div>
 
   <script src="renderer.js"></script>
 </body>
