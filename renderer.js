@@ -23,9 +23,13 @@ let lastRatioDOGEtoLTC = null;
 let lastRatioLTCtoDOGE = null;
 
 function addCommas(num) {
-  const parts = num.toString().split(".");
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return parts.join(".");
+  const str = num.toString();
+  if (str.includes(".")) {
+    const [intPart, decPart] = str.split(".");
+    return intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + decPart;
+  } else {
+    return str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 }
 
 function formatBTCPrice(price) {
@@ -75,7 +79,7 @@ async function fetchPrices() {
     ltcElem.textContent = `${addCommas(ltcDisplay)} LTC`;
     btcElem.textContent = `${addCommas(btcDisplay)} BTC`;
     ethElem.textContent = `${addCommas(ethDisplay)} ETH`;
-    dogeElem.textContent = `${addCommas(dogeDisplay)} DOGE`;
+    dogeElem.textContent = `${dogeDisplay} DOGE`;  // <-- no addCommas for DOGE to avoid comma issue
 
     const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
     const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
