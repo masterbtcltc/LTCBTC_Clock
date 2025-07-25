@@ -30,29 +30,30 @@
       padding-right: 20px;
     }
 
-    #price-container {
-      max-width: 900px;
-      width: 100%;
-      padding: 0 20px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+#price-container {
+  width: 90vw;       /* fill 90% of viewport width */
+  max-width: none;   /* remove max-width */
+  padding: 0 10px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    .price-line {
-      font-size: clamp(60px, 12vw, 100px);
-      margin: 10px 0;        /* Removed horizontal margin to prevent overflow */
-      padding: 0 15px;       /* Added horizontal padding instead */
-      color: #45C482;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      white-space: nowrap;   /* Keep text on single line */
-      overflow-wrap: normal;
-      min-width: 12ch;
-      max-width: 100%;       /* Prevent overflow */
-    }
+.price-line {
+  font-size: clamp(40px, 8vw, 120px);
+  margin: 10px 0;      /* no horizontal margin */
+  padding: 0 10px;     /* add horizontal padding */
+  color: #45C482;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  min-width: 12ch;
+  max-width: 100%;
+}
+
 
     #btc-price,
     #btc-ltc-ratio,
