@@ -11,6 +11,15 @@ let lastRatioLTCtoETH = null;
 let lastRatioXRPtoLTC = null;
 let lastRatioLTCtoXRP = null;
 
+let lastBTCDominance = null;
+let lastLTCDominance = null;
+
+// Colors for consistency
+const BTC_UP_COLOR = "yellow";
+const BTC_DOWN_COLOR = "orange";
+const LTC_UP_COLOR = "yellow";
+const LTC_DOWN_COLOR = "#00A0FF";
+
 // Helper to add commas to numbers
 function addCommas(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -33,11 +42,12 @@ function formatXRPPrice(price) {
 async function fetchPrices() {
   try {
     // Fetch all prices in parallel
-    const [ltcRes, btcRes, ethRes, xrpRes] = await Promise.all([
+    const [ltcRes, btcRes, ethRes, xrpRes, dominanceRes] = await Promise.all([
       fetch("https://api.coinbase.com/v2/prices/LTC-USD/spot"),
       fetch("https://api.coinbase.com/v2/prices/BTC-USD/spot"),
       fetch("https://api.coinbase.com/v2/prices/ETH-USD/spot"),
       fetch("https://api.coinbase.com/v2/prices/XRP-USD/spot"),
+      fetch("https://api.coinpaprika.com/v1/global"), // For dominance data
     ]);
 
     const ltcPrice = parseFloat((await ltcRes.json()).data.amount);
@@ -45,11 +55,19 @@ async function fetchPrices() {
     const ethPrice = parseFloat((await ethRes.json()).data.amount);
     const xrpPrice = parseFloat((await xrpRes.json()).data.amount);
 
+    // Get dominance data from Coinpaprika API response
+    const dominanceData = await dominanceRes.json();
+    const btcDominance = dominanceData.btc_dominance_percent;
+    const ltcDominance = dominanceData.ltc_dominance_percent;
+
     // Format prices for display
     const ltcDisplay = formatLTCPrice(ltcPrice);
     const btcDisplay = formatBTCPrice(btcPrice);
     const ethDisplay = formatETHPrice(ethPrice);
     const xrpDisplay = formatXRPPrice(xrpPrice);
+
+    const btcDomDisplay = btcDominance.toFixed(2) + "%";
+    const ltcDomDisplay = ltcDominance.toFixed(2) + "%";
 
     // Get elements
     const ltcElem = document.getElementById("ltc-price");
@@ -63,6 +81,9 @@ async function fetchPrices() {
     const ltcEthElem = document.getElementById("ltc-eth-ratio");
     const xrpLtcElem = document.getElementById("xrp-ltc-ratio");
     const ltcXrpElem = document.getElementById("ltc-xrp-ratio");
+
+    const btcDomElem = document.getElementById("btc-dominance");
+    const ltcDomElem = document.getElementById("ltc-dominance");
 
     // Update price text
     ltcElem.textContent = `${addCommas(ltcDisplay)} LTC`;
@@ -86,58 +107,73 @@ async function fetchPrices() {
     xrpLtcElem.textContent = `${ratioXRPtoLTC} XRP/LTC`;
     ltcXrpElem.textContent = `${ratioLTCtoXRP} LTC/XRP`;
 
-    // Color updates for price changes (using only BTC and LTC colors)
+    // Update dominance text
+    btcDomElem.textContent = `BTC Dominance: ${btcDomDisplay}`;
+    ltcDomElem.textContent = `LTC Dominance: ${ltcDomDisplay}`;
+
+    // Price color updates (BTC and LTC colors ONLY)
     if (lastLTCPrice !== null) {
-      ltcElem.style.color = parseFloat(ltcDisplay) > parseFloat(lastLTCPrice) ? "yellow" : "#00A0FF";
+      ltcElem.style.color = parseFloat(ltcDisplay) > parseFloat(lastLTCPrice) ? LTC_UP_COLOR : LTC_DOWN_COLOR;
     }
     lastLTCPrice = ltcDisplay;
 
     if (lastBTCPrice !== null) {
-      btcElem.style.color = parseInt(btcDisplay) > parseInt(lastBTCPrice) ? "yellow" : "orange";
+      btcElem.style.color = parseInt(btcDisplay) > parseInt(lastBTCPrice) ? BTC_UP_COLOR : BTC_DOWN_COLOR;
     }
     lastBTCPrice = btcDisplay;
 
-    // ETH and XRP use same colors as LTC for rises/falls
+    // ETH and XRP prices use LTC colors
     if (lastETHPrice !== null) {
-      ethElem.style.color = parseFloat(ethDisplay) > parseFloat(lastETHPrice) ? "yellow" : "#00A0FF";
+      ethElem.style.color = parseFloat(ethDisplay) > parseFloat(lastETHPrice) ? LTC_UP_COLOR : LTC_DOWN_COLOR;
     }
     lastETHPrice = ethDisplay;
 
     if (lastXRPPrice !== null) {
-      xrpElem.style.color = parseFloat(xrpDisplay) > parseFloat(lastXRPPrice) ? "yellow" : "#00A0FF";
+      xrpElem.style.color = parseFloat(xrpDisplay) > parseFloat(lastXRPPrice) ? LTC_UP_COLOR : LTC_DOWN_COLOR;
     }
     lastXRPPrice = xrpDisplay;
 
-    // Color updates for ratio changes (BTC colors for BTC ratios, LTC colors for LTC ratios)
+    // Ratio color updates — BTC color for BTC ratios, LTC color for LTC ratios
     if (lastRatioBTCtoLTC !== null) {
-      btcLtcElem.style.color = ratioBTCtoLTC > lastRatioBTCtoLTC ? "orange" : "#00A0FF";
+      btcLtcElem.style.color = ratioBTCtoLTC > lastRatioBTCtoLTC ? BTC_DOWN_COLOR : LTC_DOWN_COLOR;
     }
     lastRatioBTCtoLTC = ratioBTCtoLTC;
 
     if (lastRatioLTCtoBTC !== null) {
-      ltcBtcElem.style.color = ratioLTCtoBTC > lastRatioLTCtoBTC ? "#00A0FF" : "orange";
+      ltcBtcElem.style.color = ratioLTCtoBTC > lastRatioLTCtoBTC ? LTC_DOWN_COLOR : BTC_DOWN_COLOR;
     }
     lastRatioLTCtoBTC = ratioLTCtoBTC;
 
     if (lastRatioETHtoLTC !== null) {
-      ethLtcElem.style.color = ratioETHtoLTC > lastRatioETHtoLTC ? "#00A0FF" : "orange";
+      ethLtcElem.style.color = ratioETHtoLTC > lastRatioETHtoLTC ? LTC_DOWN_COLOR : BTC_DOWN_COLOR;
     }
     lastRatioETHtoLTC = ratioETHtoLTC;
 
     if (lastRatioLTCtoETH !== null) {
-      ltcEthElem.style.color = ratioLTCtoETH > lastRatioLTCtoETH ? "orange" : "#00A0FF";
+      ltcEthElem.style.color = ratioLTCtoETH > lastRatioLTCtoETH ? BTC_DOWN_COLOR : LTC_DOWN_COLOR;
     }
     lastRatioLTCtoETH = ratioLTCtoETH;
 
     if (lastRatioXRPtoLTC !== null) {
-      xrpLtcElem.style.color = ratioXRPtoLTC > lastRatioXRPtoLTC ? "#00A0FF" : "orange";
+      xrpLtcElem.style.color = ratioXRPtoLTC > lastRatioXRPtoLTC ? LTC_DOWN_COLOR : BTC_DOWN_COLOR;
     }
     lastRatioXRPtoLTC = ratioXRPtoLTC;
 
     if (lastRatioLTCtoXRP !== null) {
-      ltcXrpElem.style.color = ratioLTCtoXRP > lastRatioLTCtoXRP ? "orange" : "#00A0FF";
+      ltcXrpElem.style.color = ratioLTCtoXRP > lastRatioLTCtoXRP ? BTC_DOWN_COLOR : LTC_DOWN_COLOR;
     }
     lastRatioLTCtoXRP = ratioLTCtoXRP;
+
+    // Dominance color updates (same as prices)
+    if (lastBTCDominance !== null) {
+      btcDomElem.style.color = btcDominance > lastBTCDominance ? BTC_UP_COLOR : BTC_DOWN_COLOR;
+    }
+    lastBTCDominance = btcDominance;
+
+    if (lastLTCDominance !== null) {
+      ltcDomElem.style.color = ltcDominance > lastLTCDominance ? LTC_UP_COLOR : LTC_DOWN_COLOR;
+    }
+    lastLTCDominance = ltcDominance;
 
   } catch (error) {
     console.error("Error fetching prices:", error);
@@ -153,6 +189,8 @@ async function fetchPrices() {
       "ltc-eth-ratio",
       "xrp-ltc-ratio",
       "ltc-xrp-ratio",
+      "btc-dominance",
+      "ltc-dominance",
     ].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
