@@ -39,7 +39,7 @@ function formatLTCPrice(price) {
   return price.toFixed(2);
 }
 function formatETHPrice(price) {
-  return price.toFixed(2);
+  return Math.round(price).toString();
 }
 function formatDOGEPrice(price) {
   return price.toFixed(4);
