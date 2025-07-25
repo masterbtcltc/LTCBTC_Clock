@@ -8,27 +8,32 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
-    body {
+    html, body {
       margin: 0;
+      height: 100%;
       background-color: black;
       font-family: 'Roboto', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       overflow: hidden;
-      flex-direction: column;
       text-align: center;
-      display: flex;
+      /* Fix app window dimensions */
+      min-width: 450px;    /* Prevent too narrow window */
+      min-height: 650px;   /* Enough height for all lines */
     }
 
     .price-line {
       font-size: 10vw;
       margin: 0;
       color: #45C482;
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
       white-space: nowrap; /* Prevent text wrapping */
+      flex-wrap: nowrap;
+      min-width: 12ch; /* wider so labels don’t wrap */
     }
 
     #btc-price,
