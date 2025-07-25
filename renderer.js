@@ -222,12 +222,13 @@ document.querySelectorAll('.price-line').forEach(el => {
   el.style.transition = 'font-size 0.3s ease';
 
   el.addEventListener('mouseenter', () => {
-    el.style.fontSize = '130px';
+    el.style.fontSize = '160px';  // bigger than max clamp (120px) and hover size you had (130px)
   });
   el.addEventListener('mouseleave', () => {
-    el.style.fontSize = ''; // revert to CSS size or adjusted size from resize
+    el.style.fontSize = ''; // revert to CSS clamp or adjusted resize size
   });
 });
+
 
 fetchPrices();
 setInterval(fetchPrices, 1000);
