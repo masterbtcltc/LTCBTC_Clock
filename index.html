@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LTC and BTC Price Tracker</title>
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LTC, BTC, and ETH Price Tracker</title>
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="stylesheet" href="styles.css" />
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
@@ -35,25 +35,28 @@
     #ltc-price {
       color: #45C482;
     }
+    #eth-price {
+      color: #9b59b6; /* Purple for ETH */
+    }
     #btc-ltc-ratio,
     #ltc-btc-ratio {
       color: #FF9900;
     }
-    #btc-dominance {
-      color: #f7931a;
-    }
-    #ltc-dominance {
-      color: #bebebe;
+    #eth-ltc-ratio,
+    #ltc-eth-ratio {
+      color: #9b59b6;
     }
   </style>
 </head>
 <body>
   <div id="btc-price" class="price-line">BTC</div>
   <div id="ltc-price" class="price-line">LTC</div>
+  <div id="eth-price" class="price-line">ETH</div>
+
   <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
   <div id="ltc-btc-ratio" class="price-line">LTC/BTC</div>
-  <div id="btc-dominance" class="price-line">BTC Dominance</div>
-  <div id="ltc-dominance" class="price-line">LTC Dominance</div>
+  <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
+  <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
 
   <script src="renderer.js"></script>
 </body>
