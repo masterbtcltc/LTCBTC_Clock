@@ -42,7 +42,7 @@ function formatETHPrice(price) {
   return Math.round(price).toString();
 }
 function formatDOGEPrice(price) {
-  return price.toFixed(4);
+  return price.toFixed(2);
 }
 
 async function fetchPrices() {
@@ -84,9 +84,9 @@ async function fetchPrices() {
     const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
     const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
     const ratioETHtoLTC = (ethPrice / ltcPrice).toFixed(2);
-    const ratioLTCtoETH = (ltcPrice / ethPrice).toFixed(6);
-    const ratioDOGEtoLTC = (dogePrice / ltcPrice).toFixed(4);
-    const ratioLTCtoDOGE = (ltcPrice / dogePrice).toFixed(6);
+    const ratioLTCtoETH = (ltcPrice / ethPrice).toFixed(0);
+    const ratioDOGEtoLTC = (dogePrice / ltcPrice).toFixed(8);
+    const ratioLTCtoDOGE = (ltcPrice / dogePrice).toFixed(0);
 
     btcLtcElem.textContent = `${ratioBTCtoLTC} BTC/LTC`;
     ltcBtcElem.textContent = `${ratioLTCtoBTC} LTC/BTC`;
