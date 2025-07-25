@@ -42,7 +42,7 @@ function formatETHPrice(price) {
   return Math.round(price).toString();
 }
 function formatDOGEPrice(price) {
-  return price.toFixed(2);
+  return price.toFixed(4); // More precise but no commas added
 }
 
 async function fetchPrices() {
@@ -79,7 +79,7 @@ async function fetchPrices() {
     ltcElem.textContent = `${addCommas(ltcDisplay)} LTC`;
     btcElem.textContent = `${addCommas(btcDisplay)} BTC`;
     ethElem.textContent = `${addCommas(ethDisplay)} ETH`;
-    dogeElem.textContent = `${dogeDisplay} DOGE`;  // No addCommas here to avoid wrong comma placement
+    dogeElem.textContent = `${dogeDisplay} DOGE`;
 
     const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
     const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
