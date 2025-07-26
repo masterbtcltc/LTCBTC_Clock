@@ -21,6 +21,5 @@ async function fetchPrices() {
   document.getElementById('ltc-doge-ratio').textContent = `LTC/DOGE: ${(ltc / doge).toFixed(2)}`;
 }
 
-// Initial fetch + repeat every 60 seconds
 fetchPrices();
 setInterval(fetchPrices, 60000);
