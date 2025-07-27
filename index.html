@@ -23,12 +23,15 @@
       align-items: center;
       overflow-x: hidden;
       text-align: center;
+      min-width: 450px;
+      min-height: 650px;
       padding-left: 20px;
       padding-right: 20px;
     }
 
     #price-container {
       width: 90vw;
+      max-width: none;
       padding: 0 10px;
       margin: 0 auto;
       display: flex;
@@ -37,7 +40,7 @@
     }
 
     .price-line {
-      font-size: clamp(24px, 8vw, 120px);
+      font-size: clamp(60px, 14vw, 200px);
       margin: 10px 0;
       padding: 0 10px;
       color: #45C482;
@@ -52,7 +55,7 @@
     }
 
     .price-line:hover {
-      font-size: clamp(28px, 9vw, 140px);
+      font-size: 220px;
     }
 
     #btc-price,
@@ -91,10 +94,12 @@
     <div id="eth-price" class="price-line">ETH</div>
     <div id="doge-price" class="price-line">DOGE</div>
 
+    <!-- Group 1: Ratios with LTC as denominator -->
     <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
     <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
     <div id="doge-ltc-ratio" class="price-line">DOGE/LTC</div>
 
+    <!-- Group 2: Ratios with LTC as numerator -->
     <div id="ltc-btc-ratio" class="price-line">LTC/BTC</div>
     <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
     <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
