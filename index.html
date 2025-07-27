@@ -23,7 +23,7 @@
       align-items: center;
       overflow-x: hidden;
       text-align: center;
-      min-width: 450px;
+      min-width: 320px; /* reduced to fit small phones */
       min-height: 650px;
       padding-left: 20px;
       padding-right: 20px;
@@ -31,7 +31,6 @@
 
     #price-container {
       width: 90vw;
-      max-width: none;
       padding: 0 10px;
       margin: 0 auto;
       display: flex;
@@ -55,7 +54,7 @@
     }
 
     .price-line:hover {
-      font-size: 220px;
+      font-size: clamp(80px, 18vw, 220px);
     }
 
     #btc-price,
