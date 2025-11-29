@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LTC, BTC, ETH, DOGE Price Tracker</title>
   <link rel="icon" href="favicon.png" type="image/png" />
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
@@ -82,13 +83,6 @@
       font-size: clamp(80px, 18vw, 220px);
     }
 
-    /* Tweak sizes on small screens */
-    @media (max-width: 600px) {
-      .price-line {
-        font-size: clamp(36px, 12vw, 120px);
-      }
-    }
-
     #btc-price,
     #btc-ltc-ratio,
     #btc-eth-ratio {
@@ -117,23 +111,22 @@
       margin-right: 15px;
     }
 
+    /* Improve spacing & scaling on mobile devices */
+    @media (max-width: 700px) {
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
 
-      /* Improve spacing on mobile devices */
-  @media (max-width: 700px) {
-    body {
-      padding-top: 40px;
-      padding-bottom: 40px;
-    }
+      #price-container {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
 
-    #price-container {
-      margin-top: 20px;
-      margin-bottom: 20px;
+      .price-line {
+        font-size: clamp(40px, 18vw, 120px);
+      }
     }
-
-    .price-line {
-      font-size: clamp(40px, 18vw, 120px);
-    }
-  }
   </style>
 </head>
 <body>
@@ -278,7 +271,7 @@
       const h = window.innerHeight;
 
       // random font size: some bigger, some smaller
-      const fontSize = 18 + Math.random() * 30; // 18px - 48px
+      const fontSize = 22 + Math.random() * 30; // 22px - 52px
       el.style.fontSize = fontSize + 'px';
 
       // measure size after setting text & font
