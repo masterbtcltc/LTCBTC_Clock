@@ -170,4 +170,4 @@ async function fetchPrices() {
 
 // Fetch every 5 seconds to avoid rate limits
 fetchPrices();
-setInterval(fetchPrices, 5000);
+setInterval(fetchPrices, 1000);
