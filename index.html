@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LTC, BTC, ETH, DOGE Price Tracker</title>
   <link rel="icon" href="favicon.png" type="image/png" />
-
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
@@ -22,7 +21,9 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden; /* keep bouncing stuff inside */
+      /* keep logos inside horizontally, allow vertical scroll if needed */
+      overflow-x: hidden;
+      overflow-y: auto;
       text-align: center;
       min-width: 320px;
       min-height: 650px;
@@ -111,20 +112,29 @@
       margin-right: 15px;
     }
 
-    /* Improve spacing & scaling on mobile devices */
+    /* Improve spacing & wrapping on mobile devices */
     @media (max-width: 700px) {
-      body {
+      html, body {
         padding-top: 40px;
         padding-bottom: 40px;
       }
 
       #price-container {
-        margin-top: 20px;
-        margin-bottom: 20px;
+        width: 100vw;
+        padding: 0 8px;
+        margin-top: 10px;
+        margin-bottom: 10px;
       }
 
       .price-line {
-        font-size: clamp(40px, 18vw, 120px);
+        font-size: clamp(32px, 9vw, 60px);
+        white-space: normal;   /* allow wrapping */
+        min-width: auto;       /* allow shrinking */
+      }
+
+      .ltc-phrase {
+        max-width: 90vw;
+        font-size: 16px;       /* keep phrases readable but not huge */
       }
     }
   </style>
@@ -271,7 +281,7 @@
       const h = window.innerHeight;
 
       // random font size: some bigger, some smaller
-      const fontSize = 22 + Math.random() * 30; // 22px - 52px
+      const fontSize = 18 + Math.random() * 30; // 18px - 48px
       el.style.fontSize = fontSize + 'px';
 
       // measure size after setting text & font
