@@ -21,7 +21,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden; /* keep bouncing logos inside */
+      overflow: hidden; /* keep bouncing logos/text inside */
       text-align: center;
       min-width: 320px;
       min-height: 650px;
@@ -38,18 +38,16 @@
       pointer-events: none;  /* not clickable */
     }
 
-    /* Floating phrase that fades in/out and moves around */
-    #floating-phrase {
+    /* Floating phrase text */
+    .floating-phrase {
       position: absolute;
-      color: #00A0FF;
-      font-size: clamp(18px, 2.4vw, 28px);
-      max-width: 70vw;
-      text-align: center;
-      text-shadow: 0 0 10px rgba(0, 160, 255, 0.7);
-      z-index: 3;            /* above everything */
+      color: #ffffff;
+      z-index: 3;            /* above prices and logos */
       pointer-events: none;
-      opacity: 0;            /* JS will fade this in/out */
-      transition: opacity 1s ease;
+      white-space: nowrap;
+      text-shadow: 0 0 10px rgba(0, 160, 255, 0.8);
+      font-weight: 500;
+      opacity: 0;            /* JS animates this */
     }
 
     #price-container {
@@ -59,7 +57,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 2; /* keep text above icons */
+      z-index: 2; /* keep prices above logos but below phrase */
       position: relative;
     }
 
@@ -129,10 +127,14 @@
     <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
   </div>
 
+  <!-- your existing pricing logic -->
   <script src="renderer.js"></script>
 
   <!-- Bouncing + fade in/out Litecoin logos + floating phrases -->
   <script>
+    /***************
+     * BOUNCING LOGOS
+     ***************/
     const NUM_LOGOS = 5;  // how many LTC logos in the background
     const LOGO_SRC = 'https://cryptologos.cc/logos/litecoin-ltc-logo.svg?v=030';
 
@@ -144,8 +146,8 @@
         img.src = LOGO_SRC;
         img.className = 'ltc-logo';
 
-        // random size for each logo
-        const size = 70 + Math.random() * 90; // between 70px and 160px
+        // random size for each logo (bigger range)
+        const size = 90 + Math.random() * 160; // between 90px and 250px
         img.style.width = size + 'px';
 
         document.body.appendChild(img);
@@ -154,109 +156,136 @@
           el: img,
           x: Math.random() * (window.innerWidth - size),
           y: Math.random() * (window.innerHeight - size),
-          vx: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
-          vy: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
+          vx: (Math.random() * 1.6 + 0.5) * (Math.random() < 0.5 ? 1 : -1),
+          vy: (Math.random() * 1.6 + 0.5) * (Math.random() < 0.5 ? 1 : -1),
           phase: Math.random() * Math.PI * 2,
-          opacityBase: 0.03 + Math.random() * 0.03, // base opacity
-          opacityAmp: 0.05 + Math.random() * 0.05   // how much it fades in/out
+          opacityBase: 0.02 + Math.random() * 0.03, // base opacity
+          opacityAmp: 0.05 + Math.random() * 0.06   // how much it fades in/out
         };
 
         logos.push(obj);
       }
     }
 
-    // ===== Floating phrases setup =====
+    /********************
+     * FLOATING PHRASE TEXT
+     ********************/
     const phrases = [
-      'Litecoin is the best for payments — lowest fees with the most upside.',
-      'Are we all underestimating how big Litecoin is going to be?',
-      'If it’s good money, just use it.',
-      'Not owning Litecoin is a bet against Elon.',
-      'Everyone should diversify at least 1% into Litecoin — it’s 100x undervalued.',
-      'The scam is keeping people away from Litecoin.',
-      'Litecoin is a better Bitcoin.',
-      'Litecoin to $13K then $31K.',
-      'You can’t spell inevitable without Lee.',
-      'Litecoin heading to #2 market cap, then #1.',
-      'LTC is so cheap here.',
-      'Bitcoin dominance will fall below 30% — watch.',
-      'Litecoin is the best money we have on earth.',
-      'Accumulate Litecoin — it can do 100x at the drop of a hat.',
-      'Everyone’s ultra bearish on Litecoin when you should be ultra bullish.',
-      'Litecoin is digital silver — fast, private, and massively undervalued.',
-      'Wen digital silver’s turn?',
-      'Something new is cooking for Litecoin…',
-      'Litecoin offers auditable supply with optional privacy via MWEB.',
-      'Drivechains are coming — Litecoin will eat half the crypto market.',
-      'He who folds Bitcoin-only first wins.',
-      'You can’t spell believe without Lee.',
-      'You can’t spell definitely without Lee.',
-      'Litecoin is set to shock everyone.',
-      'Historically, this is a great time to load up on Litecoin.',
-      'Litecoin is at the bottom of an eight-year consolidation triangle.',
-      'Bitcoin started the chapter — Litecoin writes the next one.',
-      'You don’t want the hottest altcoin — you want the one that’s actually being adopted.',
-      'Litecoin mining is now more profitable than Bitcoin mining.',
-      'Litecoin is like silver to Bitcoin’s gold — faster and more practical.',
-      'Sometimes I forget the majority on this app will eventually own Litecoin.',
-      'Litecoin is that quiet giant everyone keeps sleeping on.',
-      'The real alpha is switching from BTC-only to BTC + LTC.',
-      'Privacy is a feature, not a bug — Litecoin has MWEB.',
-      'Litecoin is the Lone Star — everything gets bigger with LTC.',
-      'Do not fade this Litecoin fractal.',
-      'Litecoin is the most undervalued asset in crypto history.',
-      'The Litecoin ETF is already here — most people just haven’t noticed yet.',
-      'Litecoin is money you can actually use.',
-      'Litecoin is the cleanest shirt in the dirty laundry of crypto.',
-      'One drivechain changes everything.',
-      'Litecoin is the sleeping dragon of this cycle.',
-      'People find Litecoin and still don’t see the opportunity.',
-      'This is when you go Litecoin-only.',
-      'Litecoin is the original Bitcoin upgrade.',
-      'The next 100x is hiding in plain sight — it’s called Litecoin.',
-      'Litecoin season is closer than you think.',
-      'Litecoin is the quiet king waiting to be crowned.',
-      'Litecoin is inevitable.',
-      'Litecoin is the future of digital money.'
+      "Litecoin is the best for payments — lowest fees with the most upside.",
+      "Are we all underestimating how big Litecoin is going to be?",
+      "If it’s good money, just use it.",
+      "Not owning Litecoin is a bet against Elon.",
+      "Everyone should diversify at least 1% into Litecoin — it’s 100x undervalued.",
+      "The scam is keeping people away from Litecoin.",
+      "Litecoin is a better Bitcoin.",
+      "Litecoin to $13K then $31K.",
+      "You can’t spell inevitable without Lee.",
+      "Litecoin heading to #2 market cap, then #1.",
+      "LTC is so cheap here.",
+      "Bitcoin dominance will fall below 30% — watch.",
+      "Litecoin is the best money we have on earth.",
+      "Accumulate Litecoin — it can do 100x at the drop of a hat.",
+      "Everyone’s ultra bearish on Litecoin when you should be ultra bullish.",
+      "Litecoin is digital silver — fast, private, and massively undervalued.",
+      "Wen digital silver’s turn?",
+      "Something new is cooking for Litecoin…",
+      "Litecoin offers auditable supply with optional privacy via MWEB.",
+      "Drivechains are coming — Litecoin will eat half the crypto market.",
+      "He who folds Bitcoin-only first wins.",
+      "You can’t spell believe without Lee.",
+      "You can’t spell definitely without Lee.",
+      "Litecoin is set to shock everyone.",
+      "Historically, this is a great time to load up on Litecoin.",
+      "Litecoin is at the bottom of an eight-year consolidation triangle.",
+      "Bitcoin started the chapter — Litecoin writes the next one.",
+      "You don’t want the hottest altcoin — you want the one that’s actually being adopted.",
+      "Litecoin mining is now more profitable than Bitcoin mining.",
+      "Litecoin is like silver to Bitcoin’s gold — faster and more practical.",
+      "Sometimes I forget the majority on this app will eventually own Litecoin.",
+      "Litecoin is that quiet giant everyone keeps sleeping on.",
+      "The real alpha is switching from BTC-only to BTC + LTC.",
+      "Privacy is a feature, not a bug — Litecoin has MWEB.",
+      "Litecoin is the Lone Star — everything gets bigger with LTC.",
+      "Do not fade this Litecoin fractal.",
+      "Litecoin is the most undervalued asset in crypto history.",
+      "The Litecoin ETF is already here — most people just haven’t noticed yet.",
+      "Litecoin is money you can actually use.",
+      "Litecoin is the cleanest shirt in the dirty laundry of crypto.",
+      "One drivechain changes everything.",
+      "Litecoin is the sleeping dragon of this cycle.",
+      "People find Litecoin and still don’t see the opportunity.",
+      "This is when you go Litecoin-only.",
+      "Litecoin is the original Bitcoin upgrade.",
+      "The next 100x is hiding in plain sight — it’s called Litecoin.",
+      "Litecoin season is closer than you think.",
+      "Litecoin is the quiet king waiting to be crowned.",
+      "Litecoin is inevitable.",
+      "Litecoin is the future of digital money."
     ];
 
     const phraseEl = document.createElement('div');
-    phraseEl.id = 'floating-phrase';
+    phraseEl.className = 'floating-phrase';
     document.body.appendChild(phraseEl);
 
-    let phraseState = {
-      x: window.innerWidth * 0.15,
-      y: window.innerHeight * 0.15,
-      vx: (Math.random() * 0.6 + 0.3) * (Math.random() < 0.5 ? 1 : -1),
-      vy: (Math.random() * 0.6 + 0.3) * (Math.random() < 0.5 ? 1 : -1)
+    const phraseState = {
+      index: -1,
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      age: 0,
+      life: 600, // in frames
+      maxOpacity: 0.85
     };
 
-    function showRandomPhrase() {
-      const randomIndex = Math.floor(Math.random() * phrases.length);
-      phraseEl.textContent = phrases[randomIndex];
-
-      // reset opacity to 0, then fade in, hold, fade out
-      phraseEl.style.opacity = 0;
-
-      // slight delay so the browser applies opacity=0 before fading up
-      setTimeout(() => {
-        phraseEl.style.opacity = 0.85;
-      }, 50);
-
-      // fade out after a few seconds
-      setTimeout(() => {
-        phraseEl.style.opacity = 0;
-      }, 6000);
+    function pickNewPhraseIndex(prevIndex) {
+      if (phrases.length <= 1) return 0;
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * phrases.length);
+      } while (idx === prevIndex);
+      return idx;
     }
 
-    // initial phrase + interval for new ones
-    showRandomPhrase();
-    setInterval(showRandomPhrase, 9000); // new phrase every 9 seconds
+    function resetPhrase() {
+      phraseState.index = pickNewPhraseIndex(phraseState.index);
+      phraseEl.textContent = phrases[phraseState.index];
 
+      // random font size range
+      const fontSize = 28 + Math.random() * 36; // 28px – 64px
+      phraseEl.style.fontSize = fontSize + 'px';
+
+      // set position after we know size
+      phraseEl.style.left = '0px';
+      phraseEl.style.top = '0px';
+
+      // force layout to read width/height
+      const pw = phraseEl.offsetWidth;
+      const ph = phraseEl.offsetHeight;
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      phraseState.x = Math.random() * Math.max(10, w - pw - 20);
+      phraseState.y = Math.random() * Math.max(10, h - ph - 20);
+
+      // random velocity
+      phraseState.vx = (Math.random() * 1.4 + 0.6) * (Math.random() < 0.5 ? 1 : -1);
+      phraseState.vy = (Math.random() * 1.4 + 0.6) * (Math.random() < 0.5 ? 1 : -1);
+
+      // random life between ~8s and ~16s (assuming ~60fps)
+      phraseState.life = 480 + Math.floor(Math.random() * 480);
+      phraseState.age = 0;
+    }
+
+    /***************
+     * MAIN ANIMATION LOOP
+     ***************/
     function animate() {
       const w = window.innerWidth;
       const h = window.innerHeight;
 
-      // animate logos
+      // --- update logos ---
       logos.forEach(logo => {
         const el = logo.el;
         const lw = el.offsetWidth;
@@ -281,34 +310,53 @@
         el.style.opacity = opacity;
       });
 
-      // animate floating phrase (slow bounce)
-      const pw = phraseEl.offsetWidth || 200;
-      const ph = phraseEl.offsetHeight || 40;
+      // --- update phrase ---
+      phraseState.age++;
+
+      // move phrase
+      const pw = phraseEl.offsetWidth;
+      const ph = phraseEl.offsetHeight;
 
       phraseState.x += phraseState.vx;
       phraseState.y += phraseState.vy;
 
+      // bounce
       if (phraseState.x <= 0 || phraseState.x + pw >= w) phraseState.vx *= -1;
       if (phraseState.y <= 0 || phraseState.y + ph >= h) phraseState.vy *= -1;
 
       phraseEl.style.left = phraseState.x + 'px';
       phraseEl.style.top = phraseState.y + 'px';
 
+      // fade in/out over its life using sine
+      const t = phraseState.age / phraseState.life; // 0..1
+      if (t >= 1) {
+        resetPhrase();
+      } else {
+        const fade = Math.sin(Math.PI * t); // 0..1
+        phraseEl.style.opacity = fade * phraseState.maxOpacity;
+      }
+
       requestAnimationFrame(animate);
     }
 
-    // recreate on resize to keep them in bounds nicely
+    // Recreate logos on resize; clamp phrase into view
     window.addEventListener('resize', () => {
       logos.forEach(l => l.el.remove());
       logos.length = 0;
       createLogos();
 
-      // nudge phrase back inside bounds if needed
-      phraseState.x = Math.min(Math.max(phraseState.x, 0), window.innerWidth - 200);
-      phraseState.y = Math.min(Math.max(phraseState.y, 0), window.innerHeight - 40);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const pw = phraseEl.offsetWidth;
+      const ph = phraseEl.offsetHeight;
+
+      phraseState.x = Math.min(Math.max(phraseState.x, 0), Math.max(0, w - pw));
+      phraseState.y = Math.min(Math.max(phraseState.y, 0), Math.max(0, h - ph));
     });
 
+    // init
     createLogos();
+    resetPhrase();
     animate();
   </script>
 </body>
