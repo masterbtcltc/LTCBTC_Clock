@@ -21,12 +21,21 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow-x: hidden;
+      overflow: hidden; /* keep bouncing logos inside */
       text-align: center;
-      min-width: 320px; /* reduced to fit small phones */
+      min-width: 320px;
       min-height: 650px;
       padding-left: 20px;
       padding-right: 20px;
+      position: relative;
+    }
+
+    /* Multiple bouncing Litecoin logos */
+    .ltc-logo {
+      position: absolute;
+      opacity: 0.05;         /* starting point, JS will animate this */
+      z-index: 1;            /* behind text */
+      pointer-events: none;  /* not clickable */
     }
 
     #price-container {
@@ -36,6 +45,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      z-index: 2; /* keep text above icons */
+      position: relative;
     }
 
     .price-line {
@@ -65,7 +76,8 @@
 
     #ltc-price,
     #ltc-btc-ratio,
-    #ltc-eth-ratio {
+    #ltc-eth-ratio,
+    #doge-ltc-ratio {
       color: #00A0FF;
     }
 
@@ -74,8 +86,7 @@
       color: orange;
     }
 
-    #doge-price,
-    #doge-ltc-ratio {
+    #doge-price {
       color: #00A0FF;
     }
 
@@ -105,5 +116,81 @@
   </div>
 
   <script src="renderer.js"></script>
+
+  <!-- Bouncing + fade in/out Litecoin logos -->
+  <script>
+    const NUM_LOGOS = 5;  // how many LTC logos in the background
+    const LOGO_SRC = 'https://cryptologos.cc/logos/litecoin-ltc-logo.svg?v=030';
+
+    const logos = [];
+
+    function createLogos() {
+      for (let i = 0; i < NUM_LOGOS; i++) {
+        const img = document.createElement('img');
+        img.src = LOGO_SRC;
+        img.className = 'ltc-logo';
+
+        // random size for each logo
+        const size = 70 + Math.random() * 90; // between 70px and 160px
+        img.style.width = size + 'px';
+
+        document.body.appendChild(img);
+
+        const obj = {
+          el: img,
+          x: Math.random() * (window.innerWidth - size),
+          y: Math.random() * (window.innerHeight - size),
+          vx: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
+          vy: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
+          phase: Math.random() * Math.PI * 2,
+          opacityBase: 0.03 + Math.random() * 0.03, // base opacity
+          opacityAmp: 0.05 + Math.random() * 0.05   // how much it fades in/out
+        };
+
+        logos.push(obj);
+      }
+    }
+
+    function animate() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      logos.forEach(logo => {
+        const el = logo.el;
+        const lw = el.offsetWidth;
+        const lh = el.offsetHeight;
+
+        // move
+        logo.x += logo.vx;
+        logo.y += logo.vy;
+
+        // bounce on edges
+        if (logo.x <= 0 || logo.x + lw >= w) logo.vx *= -1;
+        if (logo.y <= 0 || logo.y + lh >= h) logo.vy *= -1;
+
+        // fade in/out using sine wave
+        logo.phase += 0.01 + Math.random() * 0.01; // slightly different speeds
+        const fade = 0.5 + 0.5 * Math.sin(logo.phase); // 0..1
+        const opacity = logo.opacityBase + logo.opacityAmp * fade;
+
+        // apply styles
+        el.style.left = logo.x + 'px';
+        el.style.top = logo.y + 'px';
+        el.style.opacity = opacity;
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    // recreate on resize to keep them in bounds nicely
+    window.addEventListener('resize', () => {
+      logos.forEach(l => l.el.remove());
+      logos.length = 0;
+      createLogos();
+    });
+
+    createLogos();
+    animate();
+  </script>
 </body>
 </html>
