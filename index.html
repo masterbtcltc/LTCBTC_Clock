@@ -6,14 +6,12 @@
   <title>LTC, BTC, ETH, DOGE Price Tracker</title>
   <link rel="icon" href="favicon.png" type="image/png" />
   
-<!-- iOS Web App -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="LTC Clock">
-<link rel="apple-touch-icon" href="favicon.png">
+  <!-- iOS Web App -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="LTC Clock">
+  <link rel="apple-touch-icon" href="favicon.png">
 
-
-  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
@@ -89,8 +87,11 @@
       transition: font-size 0.3s ease;
     }
 
-    .price-line:hover {
-      font-size: clamp(80px, 18vw, 220px);
+    /* Only apply hover-grow on devices that actually have hover (desktop, laptops, etc.) */
+    @media (hover: hover) and (pointer: fine) {
+      .price-line:hover {
+        font-size: clamp(80px, 18vw, 220px);
+      }
     }
 
     #btc-price,
