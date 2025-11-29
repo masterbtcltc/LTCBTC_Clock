@@ -33,22 +33,23 @@
     /* Multiple bouncing Litecoin logos */
     .ltc-logo {
       position: absolute;
-      opacity: 0.05;         /* JS will animate this */
-      z-index: 1;            /* behind main prices */
+      opacity: 0.05;         /* JS will breathe this up/down */
+      z-index: 1;            /* behind text */
       pointer-events: none;  /* not clickable */
     }
 
-    /* Bouncing phrase text */
+    /* Floating LTC phrases */
     .ltc-phrase {
       position: absolute;
-      color: #00A0FF;
-      z-index: 3; /* on top of logos & price text */
-      pointer-events: none;
-      text-shadow: 0 0 12px rgba(0,160,255,0.7);
-      white-space: nowrap;
-      text-align: center;
       max-width: 80vw;
-      line-height: 1.1;
+      color: #00A0FF;
+      font-weight: 500;
+      text-shadow: 0 0 10px rgba(0, 160, 255, 0.7);
+      opacity: 0;
+      z-index: 3;            /* above prices & logos */
+      pointer-events: none;
+      text-align: center;
+      line-height: 1.2;
     }
 
     #price-container {
@@ -79,6 +80,13 @@
 
     .price-line:hover {
       font-size: clamp(80px, 18vw, 220px);
+    }
+
+    /* Tweak sizes on small screens */
+    @media (max-width: 600px) {
+      .price-line {
+        font-size: clamp(36px, 12vw, 120px);
+      }
     }
 
     #btc-price,
@@ -128,45 +136,16 @@
     <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
   </div>
 
-  <!-- Your existing price logic -->
+  <!-- Prices & ratios -->
   <script src="renderer.js"></script>
 
-  <!-- Logos + phrase animation -->
+  <!-- Background logos + floating phrases -->
   <script>
-    /************ BOUNCING LOGOS ************/
-    const NUM_LOGOS = 6;  // how many LTC logos
+    const NUM_LOGOS = 7;  // how many LTC logos in the background
     const LOGO_SRC = 'https://cryptologos.cc/logos/litecoin-ltc-logo.svg?v=030';
 
     const logos = [];
 
-    function createLogos() {
-      for (let i = 0; i < NUM_LOGOS; i++) {
-        const img = document.createElement('img');
-        img.src = LOGO_SRC;
-        img.className = 'ltc-logo';
-
-        // random size for each logo (some small, some big)
-        const size = 80 + Math.random() * 180; // 80px–260px
-        img.style.width = size + 'px';
-
-        document.body.appendChild(img);
-
-        const obj = {
-          el: img,
-          x: Math.random() * (window.innerWidth - size),
-          y: Math.random() * (window.innerHeight - size),
-          vx: (Math.random() * 1.6 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
-          vy: (Math.random() * 1.6 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
-          phase: Math.random() * Math.PI * 2,
-          opacityBase: 0.02 + Math.random() * 0.03, // base opacity
-          opacityAmp: 0.04 + Math.random() * 0.06   // fade range
-        };
-
-        logos.push(obj);
-      }
-    }
-
-    /************ BOUNCING PHRASE ************/
     const phrases = [
       "Litecoin is the best for payments \u2014 lowest fees with the most upside.",
       "Are we all underestimating how big Litecoin is going to be?",
@@ -220,55 +199,84 @@
       "Litecoin is the future of digital money."
     ];
 
-    const phraseEl = document.createElement('div');
-    phraseEl.className = 'ltc-phrase';
-    document.body.appendChild(phraseEl);
-
-    const phraseState = {
-      x: 0,
-      y: 0,
-      vx: 0,
-      vy: 0,
-      phase: 0,
-      opacityBase: 0.0,
-      opacityAmp: 0.0,
-      fontSize: 32
-    };
-
-    function randomPhrase() {
-      const text = phrases[Math.floor(Math.random() * phrases.length)];
-      phraseEl.textContent = text;
-
-      // random font size range (bigger text)
-      const fontSize = 28 + Math.random() * 40; // 28px–68px
-      phraseState.fontSize = fontSize;
-      phraseEl.style.fontSize = fontSize + 'px';
-
-      // after setting text + font, we know width/height for positioning
-      const pw = phraseEl.offsetWidth || 300;
-      const ph = phraseEl.offsetHeight || 60;
-
-      // random start inside viewport
-      phraseState.x = Math.random() * Math.max(10, (window.innerWidth - pw));
-      phraseState.y = Math.random() * Math.max(10, (window.innerHeight - ph));
-
-      // random velocity for phrase
-      phraseState.vx = (Math.random() * 1.2 + 0.4) * (Math.random() < 0.5 ? 1 : -1);
-      phraseState.vy = (Math.random() * 1.2 + 0.4) * (Math.random() < 0.5 ? 1 : -1);
-
-      // fade parameters
-      phraseState.phase = Math.random() * Math.PI * 2;
-      phraseState.opacityBase = 0.12;    // base
-      phraseState.opacityAmp = 0.18;     // fade range
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    // change phrase every X ms
-    const PHRASE_INTERVAL_MS = 9000; // 9 seconds
-    setInterval(randomPhrase, PHRASE_INTERVAL_MS);
-    // initialize once at start
-    randomPhrase();
+    // Phrase object
+    let phraseObj = null;
 
-    /************ MAIN ANIMATION LOOP ************/
+    function createLogos() {
+      for (let i = 0; i < NUM_LOGOS; i++) {
+        const img = document.createElement('img');
+        img.src = LOGO_SRC;
+        img.className = 'ltc-logo';
+
+        // random size for each logo: some small, some big
+        const size = 80 + Math.random() * 180; // between 80px and 260px
+        img.style.width = size + 'px';
+
+        document.body.appendChild(img);
+
+        const obj = {
+          el: img,
+          x: Math.random() * (window.innerWidth - size),
+          y: Math.random() * (window.innerHeight - size),
+          vx: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
+          vy: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
+          phase: Math.random() * Math.PI * 2,
+          opacityBase: 0.02 + Math.random() * 0.03, // base opacity
+          opacityAmp: 0.04 + Math.random() * 0.05   // how much it fades in/out
+        };
+
+        logos.push(obj);
+      }
+    }
+
+    function createPhrase() {
+      const el = document.createElement('div');
+      el.className = 'ltc-phrase';
+      document.body.appendChild(el);
+
+      phraseObj = {
+        el,
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        phase: 0
+      };
+
+      resetPhrase();
+    }
+
+    function resetPhrase() {
+      if (!phraseObj) return;
+
+      const el = phraseObj.el;
+      el.textContent = randomFrom(phrases);
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      // random font size: some bigger, some smaller
+      const fontSize = 18 + Math.random() * 30; // 18px - 48px
+      el.style.fontSize = fontSize + 'px';
+
+      // measure size after setting text & font
+      el.style.left = '0px';
+      el.style.top = '0px';
+      const pw = el.offsetWidth || 200;
+      const ph = el.offsetHeight || 60;
+
+      phraseObj.x = Math.random() * Math.max(10, w - pw - 20);
+      phraseObj.y = Math.random() * Math.max(10, h - ph - 20);
+
+      phraseObj.vx = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
+      phraseObj.vy = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
+      phraseObj.phase = 0;
+    }
+
     function animate() {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -295,35 +303,44 @@
       });
 
       // phrase
-      const pw = phraseEl.offsetWidth;
-      const ph = phraseEl.offsetHeight;
+      if (phraseObj) {
+        const el = phraseObj.el;
+        const pw = el.offsetWidth || 200;
+        const ph = el.offsetHeight || 60;
 
-      phraseState.x += phraseState.vx;
-      phraseState.y += phraseState.vy;
+        phraseObj.x += phraseObj.vx;
+        phraseObj.y += phraseObj.vy;
 
-      if (phraseState.x <= 0 || phraseState.x + pw >= w) phraseState.vx *= -1;
-      if (phraseState.y <= 0 || phraseState.y + ph >= h) phraseState.vy *= -1;
+        if (phraseObj.x <= 0 || phraseObj.x + pw >= w) phraseObj.vx *= -1;
+        if (phraseObj.y <= 0 || phraseObj.y + ph >= h) phraseObj.vy *= -1;
 
-      phraseState.phase += 0.01;
-      const fadeP = 0.5 + 0.5 * Math.sin(phraseState.phase);
-      const opacityP = phraseState.opacityBase + phraseState.opacityAmp * fadeP;
+        phraseObj.phase += 0.01;
+        const fade = 0.5 + 0.5 * Math.sin(phraseObj.phase); // 0..1
+        const opacity = 0.12 + 0.38 * fade;  // 0.12 - 0.5
 
-      phraseEl.style.left = phraseState.x + 'px';
-      phraseEl.style.top = phraseState.y + 'px';
-      phraseEl.style.opacity = opacityP;
+        el.style.left = phraseObj.x + 'px';
+        el.style.top = phraseObj.y + 'px';
+        el.style.opacity = opacity;
+
+        // when we complete a full cycle, switch to a new phrase
+        if (phraseObj.phase > Math.PI * 2) {
+          resetPhrase();
+        }
+      }
 
       requestAnimationFrame(animate);
     }
 
-    // recreate logos on resize
+    // recreate elements on resize for better layout on different screens
     window.addEventListener('resize', () => {
       logos.forEach(l => l.el.remove());
       logos.length = 0;
       createLogos();
-      // phrase will keep bouncing; next phrase change will re-randomize position
+      resetPhrase();
     });
 
     createLogos();
+    createPhrase();
     animate();
   </script>
 </body>
