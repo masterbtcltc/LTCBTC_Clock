@@ -34,7 +34,7 @@ function formatDOGEPrice(p) { return p.toFixed(4); }
 
 function flashElement(el, isUp) {
   el.classList.remove("flash-up", "flash-down");
-  void el.offsetWidth; // reflow trick
+  void el.offsetWidth; // force reflow
   el.classList.add(isUp ? "flash-up" : "flash-down");
 }
 
@@ -57,10 +57,10 @@ async function fetchPrices() {
     const ethDisplay = formatETHPrice(ethPrice);
     const dogeDisplay = formatDOGEPrice(dogePrice);
 
-    const ltcElem = document.getElementById("ltc-price");
-    const btcElem = document.getElementById("btc-price");
-    const ethElem = document.getElementById("eth-price");
-    const dogeElem = document.getElementById("doge-price");
+    const ltcElem   = document.getElementById("ltc-price");
+    const btcElem   = document.getElementById("btc-price");
+    const ethElem   = document.getElementById("eth-price");
+    const dogeElem  = document.getElementById("doge-price");
     const btcLtcElem = document.getElementById("btc-ltc-ratio");
     const ltcBtcElem = document.getElementById("ltc-btc-ratio");
     const ethLtcElem = document.getElementById("eth-ltc-ratio");
@@ -68,40 +68,41 @@ async function fetchPrices() {
     const dogeLtcElem = document.getElementById("doge-ltc-ratio");
     const ltcDogeElem = document.getElementById("ltc-doge-ratio");
 
-    // Update text
-    ltcElem.textContent = `${addCommas(ltcDisplay)} LTC`;
-    btcElem.textContent = `${addCommas(btcDisplay)} BTC`;
-    ethElem.textContent = `${addCommas(ethDisplay)} ETH`;
+    // Update prices
+    ltcElem.textContent  = `${addCommas(ltcDisplay)} LTC`;
+    btcElem.textContent  = `${addCommas(btcDisplay)} BTC`;
+    ethElem.textContent  = `${addCommas(ethDisplay)} ETH`;
     dogeElem.textContent = `${dogeDisplay} DOGE`;
 
-    const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
-    const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
-    const ratioETHtoLTC = (ethPrice / ltcPrice).toFixed(2);
-    const ratioLTCtoETH = (ltcPrice / ethPrice).toFixed(6);
-    const ratioDOGEtoLTC = (dogePrice / ltcPrice).toFixed(8);
-    const ratioLTCtoDOGE = (ltcPrice / dogePrice).toFixed(0);
+    // Calculate ratios
+    const ratioBTCtoLTC   = (btcPrice / ltcPrice).toFixed(0);
+    const ratioLTCtoBTC   = (ltcPrice / btcPrice).toFixed(6);
+    const ratioETHtoLTC   = (ethPrice / ltcPrice).toFixed(2);
+    const ratioLTCtoETH   = (ltcPrice / ethPrice).toFixed(6);
+    const ratioDOGEtoLTC  = (dogePrice / ltcPrice).toFixed(8);
+    const ratioLTCtoDOGE  = (ltcPrice / dogePrice).toFixed(0);
 
-    btcLtcElem.textContent = `${ratioBTCtoLTC} BTC/LTC`;
-    ltcBtcElem.textContent = `${ratioLTCtoBTC} LTC/BTC`;
-    ethLtcElem.textContent = `${ratioETHtoLTC} ETH/LTC`;
-    ltcEthElem.textContent = `${ratioLTCtoETH} LTC/ETH`;
+    btcLtcElem.textContent  = `${ratioBTCtoLTC} BTC/LTC`;
+    ltcBtcElem.textContent  = `${ratioLTCtoBTC} LTC/BTC`;
+    ethLtcElem.textContent  = `${ratioETHtoLTC} ETH/LTC`;
+    ltcEthElem.textContent  = `${ratioLTCtoETH} LTC/ETH`;
     dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC`;
     ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTC/DOGE`;
 
-    // Flash animations
-    if (lastLTCPrice !== null) flashElement(ltcElem, parseFloat(ltcDisplay) > parseFloat(lastLTCPrice));
-    if (lastBTCPrice !== null) flashElement(btcElem, parseFloat(btcDisplay) > parseFloat(lastBTCPrice));
-    if (lastETHPrice !== null) flashElement(ethElem, parseFloat(ethDisplay) > parseFloat(lastETHPrice));
-    if (lastDOGEPrice !== null) flashElement(dogeElem, parseFloat(dogeDisplay) > parseFloat(lastDOGEPrice));
+    // Flash on change
+    if (lastLTCPrice !== null)      flashElement(ltcElem,   parseFloat(ltcDisplay) > parseFloat(lastLTCPrice));
+    if (lastBTCPrice !== null)      flashElement(btcElem,   parseFloat(btcDisplay) > parseFloat(lastBTCPrice));
+    if (lastETHPrice !== null)      flashElement(ethElem,   parseFloat(ethDisplay) > parseFloat(lastETHPrice));
+    if (lastDOGEPrice !== null)     flashElement(dogeElem,  parseFloat(dogeDisplay) > parseFloat(lastDOGEPrice));
 
-    if (lastRatioBTCtoLTC !== null) flashElement(btcLtcElem, parseFloat(ratioBTCtoLTC) > parseFloat(lastRatioBTCtoLTC));
-    if (lastRatioLTCtoBTC !== null) flashElement(ltcBtcElem, parseFloat(ratioLTCtoBTC) > parseFloat(lastRatioLTCtoBTC));
-    if (lastRatioETHtoLTC !== null) flashElement(ethLtcElem, parseFloat(ratioETHtoLTC) > parseFloat(lastRatioETHtoLTC));
-    if (lastRatioLTCtoETH !== null) flashElement(ltcEthElem, parseFloat(ratioLTCtoETH) > parseFloat(lastRatioLTCtoETH));
-    if (lastRatioDOGEtoLTC !== null) flashElement(dogeLtcElem, parseFloat(ratioDOGEtoLTC) > parseFloat(lastRatioDOGEtoLTC));
-    if (lastRatioLTCtoDOGE !== null) flashElement(ltcDogeElem, parseFloat(ratioLTCtoDOGE) > parseFloat(lastRatioLTCtoDOGE));
+    if (lastRatioBTCtoLTC !== null)   flashElement(btcLtcElem,  parseFloat(ratioBTCtoLTC) > parseFloat(lastRatioBTCtoLTC));
+    if (lastRatioLTCtoBTC !== null)   flashElement(ltcBtcElem,  parseFloat(ratioLTCtoBTC) > parseFloat(lastRatioLTCtoBTC));
+    if (lastRatioETHtoLTC !== null)   flashElement(ethLtcElem,  parseFloat(ratioETHtoLTC) > parseFloat(lastRatioETHtoLTC));
+    if (lastRatioLTCtoETH !== null)   flashElement(ltcEthElem,  parseFloat(ratioLTCtoETH) > parseFloat(lastRatioLTCtoETH));
+    if (lastRatioDOGEtoLTC !== null)  flashElement(dogeLtcElem, parseFloat(ratioDOGEtoLTC) > parseFloat(lastRatioDOGEtoLTC));
+    if (lastRatioLTCtoDOGE !== null)  flashElement(ltcDogeElem, parseFloat(ratioLTCtoDOGE) > parseFloat(lastRatioLTCtoDOGE));
 
-    // Save for next tick
+    // Store for next comparison next tick
     lastLTCPrice = ltcDisplay;
     lastBTCPrice = btcDisplay;
     lastETHPrice = ethDisplay;
@@ -114,13 +115,14 @@ async function fetchPrices() {
     lastRatioLTCtoDOGE = ratioLTCtoDOGE;
 
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Price fetch failed:", error);
     document.querySelectorAll(".price-line").forEach(el => {
       el.textContent = "Error";
-      el.style.color = "red";
+      el.style.color = "#ff4444";
     });
   }
 }
 
+// Start the madness
 fetchPrices();
-setInterval(fetchPrices, 1000); // ← kept exactly as you wanted (1-second madness)
+setInterval(fetchPrices, 1000); // 1-second updates exactly as the LTC maxi ordered
