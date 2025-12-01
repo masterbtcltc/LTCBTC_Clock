@@ -83,7 +83,7 @@ async function fetchPrices() {
 
     btcLtcElem.textContent = `${ratioBTCtoLTC} BTC/LTC`;
     ltcBtcElem.textContent = `${ratioLTCtoBTC} LTC/BTC`;
-    ethLtcElem.textContent = `${ratioETHLTC} ETH/LTC`;
+    ethLtcElem.textContent = `${ratioETHtoLTC} ETH/LTC`;
     ltcEthElem.textContent = `${ratioLTCtoETH} LTC/ETH`;
     dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC`;
     ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTC/DOGE`;
@@ -96,7 +96,7 @@ async function fetchPrices() {
 
     if (lastRatioBTCtoLTC !== null) flashElement(btcLtcElem, parseFloat(ratioBTCtoLTC) > parseFloat(lastRatioBTCtoLTC));
     if (lastRatioLTCtoBTC !== null) flashElement(ltcBtcElem, parseFloat(ratioLTCtoBTC) > parseFloat(lastRatioLTCtoBTC));
-    if (lastRatioETHtoLTC !== null) flashElement(ethLtcElem, parseFloat(ratioETHLTC) > parseFloat(lastRatioETHtoLTC));
+    if (lastRatioETHtoLTC !== null) flashElement(ethLtcElem, parseFloat(ratioETHtoLTC) > parseFloat(lastRatioETHtoLTC));
     if (lastRatioLTCtoETH !== null) flashElement(ltcEthElem, parseFloat(ratioLTCtoETH) > parseFloat(lastRatioLTCtoETH));
     if (lastRatioDOGEtoLTC !== null) flashElement(dogeLtcElem, parseFloat(ratioDOGEtoLTC) > parseFloat(lastRatioDOGEtoLTC));
     if (lastRatioLTCtoDOGE !== null) flashElement(ltcDogeElem, parseFloat(ratioLTCtoDOGE) > parseFloat(lastRatioLTCtoDOGE));
@@ -108,7 +108,7 @@ async function fetchPrices() {
     lastDOGEPrice = dogeDisplay;
     lastRatioBTCtoLTC = ratioBTCtoLTC;
     lastRatioLTCtoBTC = ratioLTCtoBTC;
-    lastRatioETHtoLTC = ratioETHLTC;
+    lastRatioETHtoLTC = ratioETHtoLTC;
     lastRatioLTCtoETH = ratioLTCtoETH;
     lastRatioDOGEtoLTC = ratioDOGEtoLTC;
     lastRatioLTCtoDOGE = ratioLTCtoDOGE;
