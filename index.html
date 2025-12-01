@@ -15,22 +15,14 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@500&display=swap');
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     html, body {
       margin: 0;
       height: 100%;
       background: #0a0a0a;
       background-image:
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 2px,
-          rgba(255,255,255,0.015) 2px,
-          rgba(255,255,255,0.015) 4px
-        );
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
       font-family: 'Orbitron', 'Roboto', sans-serif;
       color: #fff;
       display: flex;
@@ -46,33 +38,16 @@
       position: relative;
     }
 
-    /* Flash + glow when price changes */
+    /* Mobile-proof flash — no transform scale! */
     @keyframes priceFlash {
-      0%   { background-color: rgba(255,255,0,0.5); text-shadow: 0 0 30px yellow; transform: scale(1.05); }
-      100% { background-color: transparent; text-shadow: none; transform: scale(1); }
+      0%   { background-color: rgba(255,255,0,0.4); text-shadow: 0 0 25px yellow; }
+      100% { background-color: transparent; text-shadow: none; }
     }
-    .flash-up   { animation: priceFlash 1s ease-out; }
-    .flash-down { animation: priceFlash 1s ease-out; background-color: rgba(255,80,80,0.4); }
+    .flash-up   { animation: priceFlash 0.9s ease-out; }
+    .flash-down { animation: priceFlash 0.9s ease-out; background-color: rgba(255,80,80,0.35); }
 
-    .ltc-logo {
-      position: absolute;
-      opacity: 0.05;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .ltc-phrase {
-      position: absolute;
-      max-width: 80vw;
-      color: #00A0FF;
-      font-weight: 700;
-      text-shadow: 0 0 15px rgba(0,160,255,0.9);
-      opacity: 0;
-      z-index: 3;
-      pointer-events: none;
-      text-align: center;
-      line-height: 1.3;
-    }
+    .ltc-logo   { position: absolute; opacity: 0.05; z-index: 1; pointer-events: none; }
+    .ltc-phrase { position: absolute; max-width: 80vw; color: #00A0FF; font-weight: 700; text-shadow: 0 0 15px rgba(0,160,255,0.9); opacity: 0; z-index: 3; pointer-events: none; line-height: 1.3; }
 
     #price-container {
       width: 90vw;
@@ -94,26 +69,22 @@
       justify-content: center;
       align-items: center;
       white-space: nowrap;
-      transition: font-size 0.3s ease, transform 0.2s ease;
+      transition: font-size 0.3s ease;
       font-weight: 700;
       letter-spacing: 1px;
     }
 
     @media (hover: hover) and (pointer: fine) {
-      .price-line:hover {
-        font-size: clamp(80px, 18vw, 220px);
-        transform: translateY(-4px);
-      }
+      .price-line:hover { font-size: clamp(80px, 18vw, 220px); }
     }
 
-    #btc-price, #btc-ltc-ratio, #btc-eth-ratio { color: orange; }
+    #btc-price, #btc-ltc-ratio { color: orange; }
     #ltc-price, #ltc-btc-ratio, #ltc-eth-ratio, #doge-ltc-ratio, #ltc-doge-ratio { color: #00A0FF; }
     #eth-price, #eth-ltc-ratio { color: orange; }
     #doge-price, #doge-ltc-ratio { color: #C9B037; }
 
     @media (max-width: 700px) {
-      html, body { padding-top: 40px; padding-bottom: 40px; }
-      #price-container { width: 100vw; padding: 0 8px; }
+      html, body { padding: 40px 20px; }
       .price-line { font-size: clamp(32px, 9vw, 60px); white-space: normal; }
       .ltc-phrase { font-size: 16px; max-width: 90vw; }
     }
@@ -121,10 +92,10 @@
 </head>
 <body>
   <div id="price-container">
-    <div id="btc-price" class="price-line">BTC</div>
-    <div id="ltc-price" class="price-line">LTC</div>
-    <div id="eth-price" class="price-line">ETH</div>
-    <div id="doge-price" class="price-line">DOGE</div>
+    <div id="btc-price"     class="price-line">BTC</div>
+    <div id="ltc-price"     class="price-line">LTC</div>
+    <div id="eth-price"     class="price-line">ETH</div>
+    <div id="doge-price"    class="price-line">DOGE</div>
     <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
     <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
     <div id="doge-ltc-ratio" class="price-line">DOGE/LTC</div>
@@ -135,11 +106,12 @@
 
   <script src="renderer.js"></script>
 
+  <!-- Floating logos + phrases (unchanged from your beautiful version) -->
   <script>
     const NUM_LOGOS = 7;
     const LOGO_SRC = 'https://cryptologos.cc/logos/litecoin-ltc-logo.svg?v=030';
     const logos = [];
-    const phrases = [ /* ← your full list stays exactly the same */ 
+    const phrases = [
       "Litecoin is the best for payments — lowest fees with the most upside.",
       "Are we all underestimating how big Litecoin is going to be?",
       "If it’s good money, just use it.",
@@ -157,11 +129,10 @@
       "Litecoin is inevitable.",
       "The next 100x is hiding in plain sight — it’s called Litecoin.",
       "Litecoin is the future of digital money."
-      // ... (keep the rest — too long to paste twice)
+      // …keep the rest of your list
     ];
 
     function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
     let phraseObj = null;
 
     function createLogos() {
@@ -173,9 +144,7 @@
         img.style.width = size + 'px';
         document.body.appendChild(img);
         logos.push({
-          el: img,
-          x: Math.random() * (window.innerWidth - size),
-          y: Math.random() * (window.innerHeight - size),
+          el: img, x: Math.random() * (innerWidth - size), y: Math.random() * (innerHeight - size),
           vx: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
           vy: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
           phase: Math.random() * Math.PI * 2,
@@ -189,7 +158,7 @@
       const el = document.createElement('div');
       el.className = 'ltc-phrase';
       document.body.appendChild(el);
-      phraseObj = { el, x: 0, y: 0, vx: 0, vy: 0, phase: 0 };
+      phraseObj = { el, x:0, y:0, vx:0, vy:0, phase:0 };
       resetPhrase();
     }
 
@@ -199,10 +168,8 @@
       el.textContent = randomFrom(phrases);
       const fontSize = 18 + Math.random() * 32;
       el.style.fontSize = fontSize + 'px';
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const pw = el.offsetWidth || 200;
-      const ph = el.offsetHeight || 60;
+      const w = innerWidth, h = innerHeight;
+      const pw = el.offsetWidth || 200, ph = el.offsetHeight || 60;
       phraseObj.x = Math.random() * Math.max(20, w - pw - 40);
       phraseObj.y = Math.random() * Math.max(20, h - ph - 40);
       phraseObj.vx = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
@@ -211,15 +178,10 @@
     }
 
     function animate() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-
+      const w = innerWidth, h = innerHeight;
       logos.forEach(logo => {
-        const el = logo.el;
-        const lw = el.offsetWidth;
-        const lh = el.offsetHeight;
-        logo.x += logo.vx;
-        logo.y += logo.vy;
+        const el = logo.el, lw = el.offsetWidth, lh = el.offsetHeight;
+        logo.x += logo.vx; logo.y += logo.vy;
         if (logo.x <= 0 || logo.x + lw >= w) logo.vx *= -1;
         if (logo.y <= 0 || logo.y + lh >= h) logo.vy *= -1;
         logo.phase += 0.012;
@@ -230,20 +192,15 @@
       });
 
       if (phraseObj) {
-        const el = phraseObj.el;
-        const pw = el.offsetWidth || 200;
-        const ph = el.offsetHeight || 60;
-        phraseObj.x += phraseObj.vx;
-        phraseObj.y += phraseObj.vy;
+        const el = phraseObj.el, pw = el.offsetWidth || 200, ph = el.offsetHeight || 60;
+        phraseObj.x += phraseObj.vx; phraseObj.y += phraseObj.vy;
         if (phraseObj.x <= 0 || phraseObj.x + pw >= w) phraseObj.vx *= -1;
         if (phraseObj.y <= 0 || phraseObj.y + ph >= h) phraseObj.vy *= -1;
-
-        phraseObj.phase += 0.018; // faster + smoother
+        phraseObj.phase += 0.018;
         const fade = 0.5 + 0.5 * Math.sin(phraseObj.phase);
-        el.style.opacity = 0.0 + 0.6 * fade; // 0 → 0.6
+        el.style.opacity = 0.0 + 0.6 * fade;
         el.style.left = phraseObj.x + 'px';
         el.style.top = phraseObj.y + 'px';
-
         if (phraseObj.phase > Math.PI * 2.2) resetPhrase();
       }
 
