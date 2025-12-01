@@ -7,6 +7,135 @@ const ETH_DOWN_COLOR = "#00A0FF";
 const DOGE_UP_COLOR = "#FFB84D";
 const DOGE_DOWN_COLOR = "#FF6F00";
 
+// Store raw numbers (not formatted strings) so mobile browsers never choke on commas
+let lastLTCPrice = null;
+let lastBTCPrice = null;
+let lastETHPrice = null;
+let lastDOGEPrice = null;
+let lastRatioBTCtoLTC = null;
+let lastRatioLTCtoBTC = null;
+let lastRatioETHtoLTC = null;
+let lastRatioLTCtoETH = null;
+let lastRatioDOGEtoLTC = null;
+let lastRatioLTCtoDOGE = null;
+
+function addCommas(num) {
+  const str = num.toString();
+  if (str.includes(".")) {
+    const [int, dec] = str.split(".");
+    return int.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + dec;
+  }
+  return str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function formatBTCPrice(p) { return Math.round(p).toString(); }
+function formatLTCPrice(p) { return p.toFixed(2); }
+function formatETHPrice(p) { return Math.round(p).toString(); }
+function formatDOGEPrice(p) { return p.toFixed(4); }
+
+function flashElement(el, isUp) {
+  el.classList.remove("flash-up", "flash-down");
+  void el.offsetWidth; // reflow
+  el.classList.add(isUp ? "flash-up" : "flash-down");
+}
+
+async function fetchPrices() {
+  try {
+    const [ltcRes, btcRes, ethRes, dogeRes] = await Promise.all([
+      fetch("https://api.coinbase.com/v2/prices/LTC-USD/spot"),
+      fetch("https://api.coinbase.com/v2/prices/BTC-USD/spot"),
+      fetch("https://api.coinbase.com/v2/prices/ETH-USD/spot"),
+      fetch("https://api.coinbase.com/v2/prices/DOGE-USD/spot"),
+    ]);
+
+    const ltcPrice  = parseFloat((await ltcRes.json()).data.amount);
+    const btcPrice  = parseFloat((await btcRes.json()).data.amount);
+    const ethPrice  = parseFloat((await ethRes.json()).data.amount);
+    const dogePrice = parseFloat((await dogeRes.json()).data.amount);
+
+    const ltcDisplay = formatLTCPrice(ltcPrice);
+    const btcDisplay = formatBTCPrice(btcPrice);
+    const ethDisplay = formatETHPrice(ethPrice);
+    const dogeDisplay = formatDOGEPrice(dogePrice);
+
+    // Elements
+    const ltcElem    = document.getElementById("ltc-price");
+    const btcElem    = document.getElementById("btc-price");
+    const ethElem    = document.getElementById("eth-price");
+    const dogeElem   = document.getElementById("doge-price");
+    const btcLtcElem = document.getElementById("btc-ltc-ratio");
+    const ltcBtcElem = document.getElementById("ltc-btc-ratio");
+    const ethLtcElem = document.getElementById("eth-ltc-ratio");
+    const ltcEthElem = document.getElementById("ltc-eth-ratio");
+    const dogeLtcElem = document.getElementById("doge-ltc-ratio");
+    const ltcDogeElem = document.getElementById("ltc-doge-ratio");
+
+    // Update displayed text (with commas)
+    ltcElem.textContent  = `${addCommas(ltcDisplay)} LTC`;
+    btcElem.textContent  = `${addCommas(btcDisplay)} BTC`;
+    ethElem.textContent  = `${addCommas(ethDisplay)} ETH`;
+    dogeElem.textContent = `${dogeDisplay} DOGE`;
+
+    // Ratios (raw numbers for comparison)
+    const ratioBTCtoLTC  = btcPrice / ltcPrice;
+    const ratioLTCtoBTC  = ltcPrice / btcPrice;
+    const ratioETHtoLTC  = ethPrice / ltcPrice;
+    const ratioLTCtoETH  = ltcPrice / ethPrice;
+    const ratioDOGEtoLTC = dogePrice / ltcPrice;
+    const ratioLTCtoDOGE = ltcPrice / dogePrice;
+
+    btcLtcElem.textContent  = `${Math.round(ratioBTCtoLTC)} BTC/LTC`;
+    ltcBtcElem.textContent  = `${ratioLTCtoBTC.toFixed(6)} LTC/BTC`;
+    ethLtcElem.textContent  = `${ratioETHtoLTC.toFixed(2)} ETH/LTC`;
+    ltcEthElem.textContent  = `${ratioLTCtoETH.toFixed(6)} LTC/ETH`;
+    dogeLtcElem.textContent = `${ratioDOGEtoLTC.toFixed(8)} DOGE/LTC`;
+    ltcDogeElem.textContent = `${Math.round(ratioLTCtoDOGE)} LTC/DOGE`;
+
+    // Flash using raw numbers → works on every phone
+    if (lastLTCPrice !== null) flashElement(ltcElem, ltcPrice > lastLTCPrice);
+    if (lastBTCPrice !== null) flashElement(btcElem, btcPrice > lastBTCPrice);
+    if (lastETHPrice !== null) flashElement(ethElem, ethPrice > lastETHPrice);
+    if (lastDOGEPrice !== null) flashElement(dogeElem, dogePrice > lastDOGEPrice);
+
+    if (lastRatioBTCtoLTC !== null) flashElement(btcLtcElem, ratioBTCtoLTC > lastRatioBTCtoLTC);
+    if (lastRatioLTCtoBTC !== null) flashElement(ltcBtcElem, ratioLTCtoBTC > lastRatioLTCtoBTC);
+    if (lastRatioETHtoLTC !== null) flashElement(ethLtcElem, ratioETHtoLTC > lastRatioETHtoLTC);
+    if (lastRatioLTCtoETH !== null) flashElement(ltcEthElem, ratioLTCtoETH > lastRatioLTCtoETH);
+    if (lastRatioDOGEtoLTC !== null) flashElement(dogeLtcElem, ratioDOGEtoLTC > lastRatioDOGEtoLTC);
+    if (lastRatioLTCtoDOGE !== null) flashElement(ltcDogeElem, ratioLTCtoDOGE > lastRatioLTCtoDOGE);
+
+    // Save raw prices for next tick
+    lastLTCPrice = ltcPrice;
+    lastBTCPrice = btcPrice;
+    lastETHPrice = ethPrice;
+    lastDOGEPrice = dogePrice;
+    lastRatioBTCtoLTC = ratioBTCtoLTC;
+    lastRatioLTCtoBTC = ratioLTCtoBTC;
+    lastRatioETHtoLTC = ratioETHtoLTC;
+    lastRatioLTCtoETH = ratioLTCtoETH;
+    lastRatioDOGEtoLTC = ratioDOGEtoLTC;
+    lastRatioLTCtoDOGE = ratioLTCtoDOGE;
+
+  } catch (error) {
+    console.error("Price fetch failed:", error);
+    document.querySelectorAll(".price-line").forEach(el => {
+      el.textContent = "Error";
+      el.style.color = "#ff4444";
+    });
+  }
+}
+
+// Maximum LTC maxi speed — 1-second updates forever
+fetchPrices();
+setInterval(fetchPrices, 1000);const BTC_UP_COLOR = "yellow";
+const BTC_DOWN_COLOR = "orange";
+const LTC_UP_COLOR = "yellow";
+const LTC_DOWN_COLOR = "#00A0FF";
+const ETH_UP_COLOR = "yellow";
+const ETH_DOWN_COLOR = "#00A0FF";
+const DOGE_UP_COLOR = "#FFB84D";
+const DOGE_DOWN_COLOR = "#FF6F00";
+
 let lastLTCPrice = null;
 let lastBTCPrice = null;
 let lastETHPrice = null;
