@@ -76,10 +76,10 @@ async function fetchPrices() {
     const dogeLtcElem = document.getElementById("doge-ltc-ratio");
     const ltcDogeElem = document.getElementById("ltc-doge-ratio");
 
-    ltcElem.textContent = `${addCommas(ltcDisplay)} LTC`;
-    btcElem.textContent = `${addCommas(btcDisplay)} BTC`;
-    ethElem.textContent = `${addCommas(ethDisplay)} ETH`;
-    dogeElem.textContent = `${dogeDisplay} DOGE`;
+    ltcElem.textContent = `$${addCommas(ltcDisplay)} LTC`;
+    btcElem.textContent = `$${addCommas(btcDisplay)} BTC`;
+    ethElem.textContent = `$${addCommas(ethDisplay)} ETH`;
+    dogeElem.textContent = `$${dogeDisplay} DOGE`;
 
     const ratioBTCtoLTC = (btcPrice / ltcPrice).toFixed(0);
     const ratioLTCtoBTC = (ltcPrice / btcPrice).toFixed(6);
