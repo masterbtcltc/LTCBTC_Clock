@@ -88,12 +88,12 @@ async function fetchPrices() {
     const ratioDOGEtoLTC = (dogePrice / ltcPrice).toFixed(8);
     const ratioLTCtoDOGE = (ltcPrice / dogePrice).toFixed(0);
 
-    btcLtcElem.textContent = `${ratioBTCtoLTC} BTC/LTC`;
-    ltcBtcElem.textContent = `${ratioLTCtoBTC} LTC/BTC`;
-    ethLtcElem.textContent = `${ratioETHtoLTC} ETH/LTC`;
-    ltcEthElem.textContent = `${ratioLTCtoETH} LTC/ETH`;
-    dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGE/LTC`;
-    ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTC/DOGE`;
+    btcLtcElem.textContent = `${ratioBTCtoLTC} BTCLTC`;
+    ltcBtcElem.textContent = `${ratioLTCtoBTC} LTCBTC`;
+    ethLtcElem.textContent = `${ratioETHtoLTC} ETHLTC`;
+    ltcEthElem.textContent = `${ratioLTCtoETH} LTCETH`;
+    dogeLtcElem.textContent = `${ratioDOGEtoLTC} DOGELTC`;
+    ltcDogeElem.textContent = `${ratioLTCtoDOGE} LTCDOGE`;
 
     if (lastLTCPrice !== null) {
       ltcElem.style.color = parseFloat(ltcDisplay) > parseFloat(lastLTCPrice) ? LTC_UP_COLOR : LTC_DOWN_COLOR;
