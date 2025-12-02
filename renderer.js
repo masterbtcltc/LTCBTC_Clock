@@ -1,5 +1,5 @@
 const BTC_UP_COLOR = "yellow";
-const BTC_DOWN_COLOR = "orange";
+const BTC_DOWN_COLOR = "#00A0FF";
 
 const LTC_UP_COLOR = "yellow";
 const LTC_DOWN_COLOR = "#00A0FF";
@@ -7,8 +7,8 @@ const LTC_DOWN_COLOR = "#00A0FF";
 const ETH_UP_COLOR = "yellow";
 const ETH_DOWN_COLOR = "#00A0FF";
 
-const DOGE_UP_COLOR = "#FFB84D";
-const DOGE_DOWN_COLOR = "#FF6F00";
+const DOGE_UP_COLOR = "yellow";
+const DOGE_DOWN_COLOR = "#00A0FF";
 
 let lastLTCPrice = null;
 let lastBTCPrice = null;
