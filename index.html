@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LTC, BTC, ETH, DOGE Price Tracker</title>
+  <title>LTC • Digital Silver Supremacy</title>
   <link rel="icon" href="favicon.png" type="image/png" />
-  
-  <!-- iOS Web App -->
+
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="LTC Clock">
@@ -15,230 +14,153 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800;900&display=swap');
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     html, body {
       margin: 0;
       height: 100%;
       background-color: black;
       font-family: 'Exo 2', sans-serif;
+      color: white;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      /* keep logos inside horizontally, allow vertical scroll if needed */
       overflow-x: hidden;
       overflow-y: auto;
       text-align: center;
       min-width: 320px;
       min-height: 650px;
-      padding-left: 20px;
-      padding-right: 20px;
-      position: relative;
-    }
-
-    /* Multiple bouncing Litecoin logos */
-    .ltc-logo {
-      position: absolute;
-      opacity: 0.05;         /* JS will breathe this up/down */
-      z-index: 1;            /* behind text */
-      pointer-events: none;  /* not clickable */
-    }
-
-    /* Floating LTC phrases */
-    .ltc-phrase {
-      position: absolute;
-      max-width: 80vw;
-      color: #00A0FF;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-shadow: 0 0 10px rgba(0, 160, 255, 0.7);
-      opacity: 0;
-      z-index: 3;            /* above prices & logos */
-      pointer-events: none;
-      text-align: center;
-      line-height: 1.2;
-    }
-
-    #price-container {
-      width: 90vw;
-      padding: 0 10px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 2; /* above logos, below phrase */
+      padding: 20px;
       position: relative;
     }
 
     .price-line {
       font-size: clamp(60px, 14vw, 200px);
-      margin: 10px 0;
-      padding: 0 10px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      margin: 12px 0;
       color: #45C482;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      white-space: nowrap;
-      overflow-wrap: normal;
-      min-width: 12ch;
-      max-width: 100%;
-      transition: font-size 0.3s ease;
+      text-transform: uppercase;
+
+      /* CLEAN ZEROS – NO SLASH ANYWHERE */
+      font-variant-numeric: normal;
+      font-feature-settings: "zero" off;
+
+      transition: all 0.3s ease;
     }
 
-    /* Only apply hover-grow on devices that actually have hover (desktop, laptops, etc.) */
     @media (hover: hover) and (pointer: fine) {
-      .price-line:hover {
-        font-size: clamp(80px, 18vw, 220px);
-      }
+      .price-line:hover { font-size: clamp(80px, 18vw, 220px); }
     }
 
-    #btc-price,
-    #btc-ltc-ratio,
-    #btc-eth-ratio {
-      color: orange;
-    }
+    #btc-price, #btc-ltc-ratio, #eth-price, #eth-ltc-ratio { color: orange; }
+    #ltc-price, #ltc-btc-ratio, #ltc-eth-ratio, #doge-ltc-ratio, #ltc-doge-ratio { color: #00A0FF; }
+    #doge-price, #doge-ltc-ratio { color: #00A0FF; }
 
-    #ltc-price,
-    #ltc-btc-ratio,
-    #ltc-eth-ratio,
-    #doge-ltc-ratio {
+    .ltc-phrase {
+      position: absolute;
+      max-width: 85vw;
       color: #00A0FF;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-shadow: 0 0 15px rgba(0,160,255,0.9);
+      opacity: 0;
+      z-index: 3;
+      pointer-events: none;
+      line-height: 1.3;
     }
 
-    #eth-price,
-    #eth-ltc-ratio {
-      color: orange;
-    }
+    .ltc-logo { position: absolute; opacity: 0.05; z-index: 1; pointer-events: none; }
 
-    #doge-price {
-      color: #00A0FF;
-    }
+    #price-container { width: 90vw; z-index: 2; position: relative; }
 
-    #ltc-doge-ratio {
-      color: #00A0FF;
-      margin-left: 15px;
-      margin-right: 15px;
-    }
-
-    /* Improve spacing & wrapping on mobile devices */
     @media (max-width: 700px) {
-      html, body {
-        padding-top: 40px;
-        padding-bottom: 40px;
-      }
-
-      #price-container {
-        width: 100vw;
-        padding: 0 8px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-      }
+      html, body { padding: 40px 15px; }
       .price-line {
-        font-variant-numeric: normal;
-        font-feature-settings: "zero" off;
+        font-size: clamp(36px, 10vw, 68px);
+        letter-spacing: 1.8px;
+        white-space: normal;
       }
-      .price-line {
-        font-size: clamp(32px, 9vw, 60px);
-        white-space: normal;   /* allow wrapping */
-        min-width: auto;       /* allow shrinking */
-      }
-
-      .ltc-phrase {
-        max-width: 90vw;
-        font-size: 16px;       /* keep phrases readable but not huge */
-      }
+      .ltc-phrase { font-size: 17px; max-width: 92vw; }
     }
   </style>
 </head>
 <body>
-  <div id="price-container">
-    <div id="btc-price" class="price-line">BTC</div>
-    <div id="ltc-price" class="price-line">LTC</div>
-    <div id="eth-price" class="price-line">ETH</div>
-    <div id="doge-price" class="price-line">DOGE</div>
 
-    <!-- Group 1: Ratios with LTC as denominator -->
+  <div id="price-container">
+    <div id="btc-price"     class="price-line">BTC</div>
+    <div id="ltc-price"     class="price-line">LTC</div>
+    <div id="eth-price"     class="price-line">ETH</div>
+    <div id="doge-price"    class="price-line">DOGE</div>
     <div id="btc-ltc-ratio" class="price-line">BTC/LTC</div>
     <div id="eth-ltc-ratio" class="price-line">ETH/LTC</div>
     <div id="doge-ltc-ratio" class="price-line">DOGE/LTC</div>
-
-    <!-- Group 2: Ratios with LTC as numerator -->
     <div id="ltc-btc-ratio" class="price-line">LTC/BTC</div>
     <div id="ltc-eth-ratio" class="price-line">LTC/ETH</div>
     <div id="ltc-doge-ratio" class="price-line">LTC/DOGE</div>
   </div>
 
-  <!-- Prices & ratios -->
   <script src="renderer.js"></script>
 
-  <!-- Background logos + floating phrases -->
   <script>
-    const NUM_LOGOS = 7;  // how many LTC logos in the background
+    const NUM_LOGOS = 7;
     const LOGO_SRC = 'https://cryptologos.cc/logos/litecoin-ltc-logo.svg?v=030';
-
     const logos = [];
-
     const phrases = [
-      "Litecoin is the best for payments \u2014 lowest fees with the most upside.",
+      "Litecoin is the best for payments — lowest fees with the most upside.",
       "Are we all underestimating how big Litecoin is going to be?",
-      "If it\u2019s good money, just use it.",
+      "If it’s good money, just use it.",
       "Not owning Litecoin is a bet against Elon.",
-      "Everyone should diversify at least 1% into Litecoin \u2014 it\u2019s 100x undervalued.",
+      "Everyone should diversify at least 1% into Litecoin — it’s 100x undervalued.",
       "The scam is keeping people away from Litecoin.",
       "Litecoin is a better Bitcoin.",
       "Litecoin to $13K then $31K.",
-      "You can\u2019t spell inevitable without Lee.",
+      "You can’t spell inevitable without Lee.",
       "Litecoin heading to #2 market cap, then #1.",
       "LTC is so cheap here.",
-      "Bitcoin dominance will fall below 30% \u2014 watch.",
+      "Bitcoin dominance will fall below 30% — watch.",
       "Litecoin is the best money we have on earth.",
-      "Accumulate Litecoin \u2014 it can do 100x at the drop of a hat.",
-      "Everyone\u2019s ultra bearish on Litecoin when you should be ultra bullish.",
-      "Litecoin is digital silver \u2014 fast, private, and massively undervalued.",
-      "Wen digital silver\u2019s turn?",
-      "Something new is cooking for Litecoin\u2026",
+      "Accumulate Litecoin — it can do 100x at the drop of a hat.",
+      "Everyone’s ultra bearish on Litecoin when you should be ultra bullish.",
+      "Litecoin is digital silver — fast, private, and massively undervalued.",
+      "Wen digital silver’s turn?",
+      "Something new is cooking for Litecoin…",
       "Litecoin offers auditable supply with optional privacy via MWEB.",
-      "Drivechains are coming \u2014 Litecoin will eat half the crypto market.",
+      "Drivechains are coming — Litecoin will eat half the crypto market.",
       "He who folds Bitcoin-only first wins.",
-      "You can\u2019t spell believe without Lee.",
-      "You can\u2019t spell definitely without Lee.",
+      "You can’t spell believe without Lee.",
+      "You can’t spell definitely without Lee.",
       "Litecoin is set to shock everyone.",
       "Historically, this is a great time to load up on Litecoin.",
       "Litecoin is at the bottom of an eight-year consolidation triangle.",
-      "Bitcoin started the chapter \u2014 Litecoin writes the next one.",
-      "You don\u2019t want the hottest altcoin \u2014 you want the one that\u2019s actually being adopted.",
+      "Bitcoin started the chapter — Litecoin writes the next one.",
+      "You don’t want the hottest altcoin — you want the one that’s actually being adopted.",
       "Litecoin mining is now more profitable than Bitcoin mining.",
-      "Litecoin is like silver to Bitcoin\u2019s gold \u2014 faster and more practical.",
+      "Litecoin is like silver to Bitcoin’s gold — faster and more practical.",
       "Sometimes I forget the majority on this app will eventually own Litecoin.",
       "Litecoin is that quiet giant everyone keeps sleeping on.",
       "The real alpha is switching from BTC-only to BTC + LTC.",
-      "Privacy is a feature, not a bug \u2014 Litecoin has MWEB.",
-      "Litecoin is the Lone Star \u2014 everything gets bigger with LTC.",
+      "Privacy is a feature, not a bug — Litecoin has MWEB.",
+      "Litecoin is the Lone Star — everything gets bigger with LTC.",
       "Do not fade this Litecoin fractal.",
       "Litecoin is the most undervalued asset in crypto history.",
-      "The Litecoin ETF is already here \u2014 most people just haven\u2019t noticed yet.",
+      "The Litecoin ETF is already here — most people just haven’t noticed yet.",
       "Litecoin is money you can actually use.",
       "Litecoin is the cleanest shirt in the dirty laundry of crypto.",
       "One drivechain changes everything.",
       "Litecoin is phoenix den to Bitcoin's dragon den",
-      "People find Litecoin and still don\u2019t see the opportunity.",
+      "People find Litecoin and still don’t see the opportunity.",
       "This is when you go Litecoin-only.",
       "Litecoin is the original Bitcoin upgrade.",
-      "The next 100x is hiding in plain sight \u2014 it\u2019s called Litecoin.",
+      "The next 100x is hiding in plain sight — it’s called Litecoin.",
       "Litecoin season is closer than you think.",
       "Litecoin is the quiet king waiting to be crowned.",
       "Litecoin is inevitable.",
       "Litecoin is the future of digital money."
     ];
 
-    function randomFrom(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    // Phrase object
+    function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
     let phraseObj = null;
 
     function createLogos() {
@@ -246,25 +168,19 @@
         const img = document.createElement('img');
         img.src = LOGO_SRC;
         img.className = 'ltc-logo';
-
-        // random size for each logo: some small, some big
-        const size = 80 + Math.random() * 180; // between 80px and 260px
+        const size = 80 + Math.random() * 180;
         img.style.width = size + 'px';
-
         document.body.appendChild(img);
-
-        const obj = {
+        logos.push({
           el: img,
           x: Math.random() * (window.innerWidth - size),
           y: Math.random() * (window.innerHeight - size),
           vx: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
           vy: (Math.random() * 1.4 + 0.4) * (Math.random() < 0.5 ? 1 : -1),
           phase: Math.random() * Math.PI * 2,
-          opacityBase: 0.02 + Math.random() * 0.03, // base opacity
-          opacityAmp: 0.04 + Math.random() * 0.05   // how much it fades in/out
-        };
-
-        logos.push(obj);
+          opacityBase: 0.02 + Math.random() * 0.03,
+          opacityAmp: 0.04 + Math.random() * 0.05
+        });
       }
     }
 
@@ -272,101 +188,58 @@
       const el = document.createElement('div');
       el.className = 'ltc-phrase';
       document.body.appendChild(el);
-
-      phraseObj = {
-        el,
-        x: 0,
-        y: 0,
-        vx: 0,
-        vy: 0,
-        phase: 0
-      };
-
+      phraseObj = { el, x:0, y:0, vx:0, vy:0, phase:0 };
       resetPhrase();
     }
 
     function resetPhrase() {
       if (!phraseObj) return;
-
       const el = phraseObj.el;
       el.textContent = randomFrom(phrases);
-
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-
-      // random font size: some bigger, some smaller
-      const fontSize = 18 + Math.random() * 30; // 18px - 48px
+      const fontSize = 18 + Math.random() * 30;
       el.style.fontSize = fontSize + 'px';
-
-      // measure size after setting text & font
-      el.style.left = '0px';
-      el.style.top = '0px';
-      const pw = el.offsetWidth || 200;
-      const ph = el.offsetHeight || 60;
-
+      const w = window.innerWidth, h = window.innerHeight;
+      const pw = el.offsetWidth || 200, ph = el.offsetHeight || 60;
       phraseObj.x = Math.random() * Math.max(10, w - pw - 20);
       phraseObj.y = Math.random() * Math.max(10, h - ph - 20);
-
       phraseObj.vx = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
       phraseObj.vy = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
       phraseObj.phase = 0;
     }
 
     function animate() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const w = window.innerWidth, h = window.innerHeight;
 
-      // logos
       logos.forEach(logo => {
         const el = logo.el;
-        const lw = el.offsetWidth;
-        const lh = el.offsetHeight;
-
-        logo.x += logo.vx;
-        logo.y += logo.vy;
-
+        const lw = el.offsetWidth, lh = el.offsetHeight;
+        logo.x += logo.vx; logo.y += logo.vy;
         if (logo.x <= 0 || logo.x + lw >= w) logo.vx *= -1;
         if (logo.y <= 0 || logo.y + lh >= h) logo.vy *= -1;
-
         logo.phase += 0.01 + Math.random() * 0.01;
         const fade = 0.5 + 0.5 * Math.sin(logo.phase);
-        const opacity = logo.opacityBase + logo.opacityAmp * fade;
-
+        el.style.opacity = logo.opacityBase + logo.opacityAmp * fade;
         el.style.left = logo.x + 'px';
         el.style.top = logo.y + 'px';
-        el.style.opacity = opacity;
       });
 
-      // phrase
       if (phraseObj) {
         const el = phraseObj.el;
-        const pw = el.offsetWidth || 200;
-        const ph = el.offsetHeight || 60;
-
-        phraseObj.x += phraseObj.vx;
-        phraseObj.y += phraseObj.vy;
-
+        const pw = el.offsetWidth || 200, ph = el.offsetHeight || 60;
+        phraseObj.x += phraseObj.vx; phraseObj.y += phraseObj.vy;
         if (phraseObj.x <= 0 || phraseObj.x + pw >= w) phraseObj.vx *= -1;
         if (phraseObj.y <= 0 || phraseObj.y + ph >= h) phraseObj.vy *= -1;
-
         phraseObj.phase += 0.01;
-        const fade = 0.5 + 0.5 * Math.sin(phraseObj.phase); // 0..1
-        const opacity = 0.12 + 0.38 * fade;  // 0.12 - 0.5
-
+        const fade = 0.5 + 0.5 * Math.sin(phraseObj.phase);
+        el.style.opacity = 0.12 + 0.38 * fade;
         el.style.left = phraseObj.x + 'px';
         el.style.top = phraseObj.y + 'px';
-        el.style.opacity = opacity;
-
-        // when we complete a full cycle, switch to a new phrase
-        if (phraseObj.phase > Math.PI * 2) {
-          resetPhrase();
-        }
+        if (phraseObj.phase > Math.PI * 2) resetPhrase();
       }
 
       requestAnimationFrame(animate);
     }
 
-    // recreate elements on resize for better layout on different screens
     window.addEventListener('resize', () => {
       logos.forEach(l => l.el.remove());
       logos.length = 0;
@@ -378,5 +251,6 @@
     createPhrase();
     animate();
   </script>
+
 </body>
 </html>
