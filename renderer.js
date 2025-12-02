@@ -147,7 +147,7 @@ async function fetchPrices() {
 
     if (lastRatioDOGEtoLTC !== null) {
       dogeLtcElem.style.color =
-        parseFloat(ratioDOGEtoLTC) > parseFloat(lastRatioDOGEtoLTC) ? DOGE_UP_COLOR : DOGE_DOWN_COLOR;
+        parseFloat(ratioDOGEtoLTC) > parseFloat(lastRatioDOGEtoLTC) ? #00A0FF : "yellow";
     }
     lastRatioDOGEtoLTC = ratioDOGEtoLTC;
 
