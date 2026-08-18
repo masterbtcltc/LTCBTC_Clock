@@ -5,17 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LTC • Digital Silver Supremacy</title>
   <link rel="icon" href="favicon.png" type="image/png" />
-
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="LTC Clock">
   <link rel="apple-touch-icon" href="favicon.png">
-
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800;900&display=swap');
-
     *, *::before, *::after { box-sizing: border-box; }
-
     html, body {
       margin: 0;
       height: 100%;
@@ -32,7 +28,28 @@
       min-width: 320px;
       min-height: 650px;
       padding: 20px;
+      padding-top: 90px; /* room for the header */
       position: relative;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    }
+    .header img {
+      max-height: 52px;
+      width: auto;
+      display: block;
     }
 
     .price-line {
@@ -40,24 +57,18 @@
       font-weight: 800;
       letter-spacing: 2.5px;
       margin: 12px 0;
-      color: #color: #00A0FF;
+      color: #00A0FF;
       text-transform: uppercase;
-
-      /* CLEAN ZEROS – NO SLASH ANYWHERE */
       font-variant-numeric: normal;
       font-feature-settings: "zero" off;
-
       transition: all 0.3s ease;
     }
-
     @media (hover: hover) and (pointer: fine) {
       .price-line:hover { font-size: clamp(80px, 18vw, 220px); }
     }
-
     #btc-price, #btc-ltc-ratio, #eth-price, #eth-ltc-ratio { color: #00A0FF; }
     #ltc-price, #ltc-btc-ratio, #ltc-eth-ratio, #doge-ltc-ratio, #ltc-doge-ratio { color: #00A0FF; }
     #doge-price, #doge-ltc-ratio { color: #00A0FF; }
-
     .ltc-phrase {
       position: absolute;
       max-width: 85vw;
@@ -70,13 +81,11 @@
       pointer-events: none;
       line-height: 1.3;
     }
-
     .ltc-logo { position: absolute; opacity: 0.05; z-index: 1; pointer-events: none; }
-
     #price-container { width: 90vw; z-index: 2; position: relative; }
-
     @media (max-width: 700px) {
-      html, body { padding: 40px 15px; }
+      html, body { padding: 40px 15px; padding-top: 80px; }
+      .header img { max-height: 42px; }
       .price-line {
         font-size: clamp(36px, 10vw, 68px);
         letter-spacing: 1.8px;
@@ -88,11 +97,16 @@
 </head>
 <body>
 
+  <!-- Header with Look Into Litecoin logo -->
+  <header class="header">
+    <img src="lilbanner.png" alt="Look Into Litecoin" />
+  </header>
+
   <div id="price-container">
-    <div id="btc-price"     class="price-line">BTC</div>
-    <div id="ltc-price"     class="price-line">LTC</div>
-    <div id="eth-price"     class="price-line">ETH</div>
-    <div id="doge-price"    class="price-line">DOGE</div>
+    <div id="btc-price" class="price-line">BTC</div>
+    <div id="ltc-price" class="price-line">LTC</div>
+    <div id="eth-price" class="price-line">ETH</div>
+    <div id="doge-price" class="price-line">DOGE</div>
     <div id="btc-ltc-ratio" class="price-line">BTCLTC</div>
     <div id="eth-ltc-ratio" class="price-line">ETHLTC</div>
     <div id="doge-ltc-ratio" class="price-line">DOGELTC</div>
@@ -102,7 +116,6 @@
   </div>
 
   <script src="renderer.js"></script>
-
   <script>
     const NUM_LOGOS = 7;
     const LOGO_SRC = 'https://cryptologos.cc/logos/litecoin-ltc-logo.svg?v=030';
@@ -159,10 +172,8 @@
       "Litecoin is inevitable.",
       "Litecoin is the future of digital money."
     ];
-
     function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
     let phraseObj = null;
-
     function createLogos() {
       for (let i = 0; i < NUM_LOGOS; i++) {
         const img = document.createElement('img');
@@ -183,7 +194,6 @@
         });
       }
     }
-
     function createPhrase() {
       const el = document.createElement('div');
       el.className = 'ltc-phrase';
@@ -191,7 +201,6 @@
       phraseObj = { el, x:0, y:0, vx:0, vy:0, phase:0 };
       resetPhrase();
     }
-
     function resetPhrase() {
       if (!phraseObj) return;
       const el = phraseObj.el;
@@ -206,10 +215,8 @@
       phraseObj.vy = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
       phraseObj.phase = 0;
     }
-
     function animate() {
       const w = window.innerWidth, h = window.innerHeight;
-
       logos.forEach(logo => {
         const el = logo.el;
         const lw = el.offsetWidth, lh = el.offsetHeight;
@@ -222,7 +229,6 @@
         el.style.left = logo.x + 'px';
         el.style.top = logo.y + 'px';
       });
-
       if (phraseObj) {
         const el = phraseObj.el;
         const pw = el.offsetWidth || 200, ph = el.offsetHeight || 60;
@@ -236,21 +242,17 @@
         el.style.top = phraseObj.y + 'px';
         if (phraseObj.phase > Math.PI * 2) resetPhrase();
       }
-
       requestAnimationFrame(animate);
     }
-
     window.addEventListener('resize', () => {
       logos.forEach(l => l.el.remove());
       logos.length = 0;
       createLogos();
       resetPhrase();
     });
-
     createLogos();
     createPhrase();
     animate();
   </script>
-
 </body>
 </html>
