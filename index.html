@@ -41,7 +41,38 @@
       width: auto;
     }
 
-    /* ===== SLIDER CONTAINER ===== */
+    /* ===== DESKTOP ARROWS ===== */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      background: rgba(0, 160, 255, 0.15);
+      border: 2px solid #00A0FF;
+      border-radius: 50%;
+      color: #00A0FF;
+      font-size: 1.6rem;
+      display: none; /* hidden on mobile */
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 900;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .nav-arrow:hover {
+      background: #00A0FF;
+      color: #000;
+    }
+    .nav-arrow.left { left: 18px; }
+    .nav-arrow.right { right: 18px; }
+
+    @media (min-width: 768px) {
+      .nav-arrow { display: flex; }
+    }
+
+    /* ===== SLIDER ===== */
     #slider {
       position: absolute;
       top: 64px;
@@ -86,7 +117,6 @@
     }
     #price-container { width: 92vw; z-index: 2; position: relative; }
 
-    /* Floating elements (kept from original) */
     .ltc-phrase {
       position: absolute;
       max-width: 85vw;
@@ -104,43 +134,58 @@
     /* ===== PAGE 2: PORTFOLIO ===== */
     #page-portfolio {
       background: #000;
-      padding: 20px 16px 40px;
+      padding: 20px 16px 50px;
       color: white;
     }
     .portfolio-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
     .portfolio-header h1 {
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 800;
       color: #00A0FF;
+      margin: 0;
+    }
+    .header-buttons {
+      display: flex;
+      gap: 10px;
     }
     .btn {
       background: #00A0FF;
       color: #000;
       border: none;
-      padding: 10px 18px;
+      padding: 9px 16px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .btn-secondary {
       background: transparent;
       border: 2px solid #00A0FF;
       color: #00A0FF;
     }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .total-balance {
       background: linear-gradient(135deg, #001a2e, #00335c);
       border: 1px solid #00A0FF44;
       border-radius: 16px;
       padding: 22px;
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 26px;
     }
     .total-balance .label {
       font-size: 0.9rem;
@@ -148,7 +193,7 @@
       margin-bottom: 6px;
     }
     .total-balance .amount {
-      font-size: 2.4rem;
+      font-size: 2.3rem;
       font-weight: 800;
       color: #00A0FF;
     }
@@ -213,7 +258,7 @@
       max-width: 480px;
       border-radius: 20px 20px 0 0;
       padding: 24px 20px 40px;
-      max-height: 85vh;
+      max-height: 88vh;
       overflow-y: auto;
     }
     .modal h2 {
@@ -245,7 +290,7 @@
     .modal-actions {
       display: flex;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 20px;
     }
     .modal-actions .btn { flex: 1; }
     .saved-list { margin-top: 28px; }
@@ -269,22 +314,20 @@
       background: none;
       border: none;
       color: #ff4444;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       cursor: pointer;
       padding: 4px 8px;
     }
 
-    /* Navigation hint */
     .swipe-hint {
       position: fixed;
-      bottom: 18px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.75rem;
-      opacity: 0.45;
+      opacity: 0.4;
       z-index: 50;
       pointer-events: none;
-      transition: opacity 0.4s;
     }
 
     @media (max-width: 600px) {
@@ -299,6 +342,10 @@
   <header class="header">
     <img src="lilbanner.png" alt="Look Into Litecoin" />
   </header>
+
+  <!-- Desktop navigation arrows -->
+  <div class="nav-arrow left" id="arrow-left" title="Previous page">‹</div>
+  <div class="nav-arrow right" id="arrow-right" title="Next page">›</div>
 
   <!-- Swipe container -->
   <div id="slider" class="page-1">
@@ -322,8 +369,11 @@
     <!-- PAGE 2: Portfolio -->
     <div class="page" id="page-portfolio">
       <div class="portfolio-header">
-        <h1>My Litecoin</h1>
-        <button class="btn" id="open-settings">+ Addresses</button>
+        <h1 id="portfolio-title">My Litecoin</h1>
+        <div class="header-buttons">
+          <button class="btn btn-secondary" id="refresh-btn" title="Refresh balances">↻</button>
+          <button class="btn" id="open-settings">+ Addresses</button>
+        </div>
       </div>
 
       <div class="total-balance">
@@ -332,9 +382,7 @@
         <div class="usd" id="total-usd">≈ $—</div>
       </div>
 
-      <div class="address-list" id="address-list">
-        <!-- filled by JS -->
-      </div>
+      <div class="address-list" id="address-list"></div>
     </div>
   </div>
 
@@ -343,11 +391,21 @@
   <!-- Settings Modal -->
   <div class="modal-overlay" id="settings-modal">
     <div class="modal">
-      <h2>Manage Addresses</h2>
+      <h2>Portfolio Settings</h2>
+      
+      <!-- Portfolio Name -->
+      <div class="form-group">
+        <label>Portfolio Name</label>
+        <input type="text" id="portfolio-name-input" placeholder="e.g. Cold Storage, Family Stack, etc.">
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #333; margin: 24px 0;">
+
+      <h3 style="font-size: 1.1rem; margin-bottom: 14px; color: #00A0FF;">Add Address</h3>
       
       <div class="form-group">
         <label>Label (optional)</label>
-        <input type="text" id="addr-label" placeholder="e.g. Cold Storage, Exchange, etc.">
+        <input type="text" id="addr-label" placeholder="e.g. Cold Storage, Exchange">
       </div>
       <div class="form-group">
         <label>Litecoin Address</label>
@@ -355,13 +413,11 @@
       </div>
       
       <div class="modal-actions">
-        <button class="btn btn-secondary" id="close-settings">Cancel</button>
+        <button class="btn btn-secondary" id="close-settings">Close</button>
         <button class="btn" id="save-address">Save Address</button>
       </div>
 
-      <div class="saved-list" id="saved-list">
-        <!-- filled by JS -->
-      </div>
+      <div class="saved-list" id="saved-list"></div>
     </div>
   </div>
 
@@ -371,18 +427,23 @@
     // STATE & STORAGE
     // ======================
     const STORAGE_KEY = 'ltc_watch_addresses';
+    const NAME_KEY = 'ltc_portfolio_name';
+    
     let addresses = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let portfolioName = localStorage.getItem(NAME_KEY) || 'My Litecoin';
     let currentPage = 1;
     let ltcPriceUsd = 0;
+    let isRefreshing = false;
+
+    // Apply saved name
+    document.getElementById('portfolio-title').textContent = portfolioName;
 
     // ======================
-    // SWIPE NAVIGATION
+    // NAVIGATION (Swipe + Arrows)
     // ======================
     const slider = document.getElementById('slider');
     const hint = document.getElementById('swipe-hint');
-    let startX = 0;
-    let startY = 0;
-    let isDragging = false;
+    let startX = 0, startY = 0, isDragging = false;
 
     document.addEventListener('touchstart', e => {
       startX = e.touches[0].clientX;
@@ -394,10 +455,7 @@
       if (!isDragging) return;
       const dx = e.touches[0].clientX - startX;
       const dy = e.touches[0].clientY - startY;
-      // only horizontal swipes
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-        e.preventDefault();
-      }
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) e.preventDefault();
     }, { passive: false });
 
     document.addEventListener('touchend', e => {
@@ -405,20 +463,29 @@
       isDragging = false;
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
-
       if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return;
 
-      if (dx < 0 && currentPage === 1) {
-        goToPage(2);
-      } else if (dx > 0 && currentPage === 2) {
-        goToPage(1);
-      }
+      if (dx < 0 && currentPage === 1) goToPage(2);
+      else if (dx > 0 && currentPage === 2) goToPage(1);
     });
+
+    // Arrow buttons
+    document.getElementById('arrow-left').onclick = () => {
+      if (currentPage === 2) goToPage(1);
+    };
+    document.getElementById('arrow-right').onclick = () => {
+      if (currentPage === 1) goToPage(2);
+    };
 
     function goToPage(page) {
       currentPage = page;
       slider.className = page === 1 ? 'page-1' : 'page-2';
       hint.textContent = page === 1 ? '← Swipe for Portfolio' : 'Swipe for Clock →';
+      
+      // Update arrow visibility/state
+      document.getElementById('arrow-left').style.opacity = page === 1 ? '0.3' : '1';
+      document.getElementById('arrow-right').style.opacity = page === 2 ? '0.3' : '1';
+
       if (page === 2) refreshBalances();
     }
 
@@ -426,11 +493,21 @@
     // SETTINGS MODAL
     // ======================
     const modal = document.getElementById('settings-modal');
+    
     document.getElementById('open-settings').onclick = () => {
+      document.getElementById('portfolio-name-input').value = portfolioName;
       renderSavedList();
       modal.classList.add('open');
     };
-    document.getElementById('close-settings').onclick = () => modal.classList.remove('open');
+    
+    document.getElementById('close-settings').onclick = () => {
+      // Save portfolio name when closing
+      const newName = document.getElementById('portfolio-name-input').value.trim() || 'My Litecoin';
+      portfolioName = newName;
+      localStorage.setItem(NAME_KEY, newName);
+      document.getElementById('portfolio-title').textContent = newName;
+      modal.classList.remove('open');
+    };
 
     document.getElementById('save-address').onclick = () => {
       const label = document.getElementById('addr-label').value.trim() || 'Address';
@@ -438,8 +515,6 @@
 
       if (!addr) return alert('Please enter an address');
       if (!isValidLtcAddress(addr)) return alert('That does not look like a valid Litecoin address');
-
-      // prevent duplicates
       if (addresses.some(a => a.address.toLowerCase() === addr.toLowerCase())) {
         return alert('This address is already saved');
       }
@@ -453,7 +528,6 @@
     };
 
     function isValidLtcAddress(addr) {
-      // basic check – covers legacy, P2SH and bech32
       return /^(L|M)[a-km-zA-HJ-NP-Z1-9]{26,33}$/.test(addr) ||
              /^ltc1[a-z0-9]{39,59}$/i.test(addr);
     }
@@ -493,9 +567,23 @@
     }
 
     // ======================
+    // REFRESH BUTTON
+    // ======================
+    document.getElementById('refresh-btn').onclick = () => {
+      if (!isRefreshing) refreshBalances(true);
+    };
+
+    // ======================
     // BALANCE FETCHING
     // ======================
-    async function refreshBalances() {
+    async function refreshBalances(manual = false) {
+      if (isRefreshing) return;
+      isRefreshing = true;
+
+      const refreshBtn = document.getElementById('refresh-btn');
+      refreshBtn.disabled = true;
+      refreshBtn.textContent = '…';
+
       const list = document.getElementById('address-list');
       
       if (addresses.length === 0) {
@@ -508,21 +596,23 @@
           </div>`;
         document.getElementById('total-ltc').textContent = '0.00 LTC';
         document.getElementById('total-usd').textContent = '≈ $0.00';
+        finishRefresh();
         return;
       }
 
-      list.innerHTML = '<div style="text-align:center;padding:40px;opacity:0.6">Loading balances…</div>';
+      if (manual) {
+        list.innerHTML = '<div style="text-align:center;padding:40px;opacity:0.6">Refreshing…</div>';
+      }
 
       let totalSats = 0;
       const results = [];
 
       for (const item of addresses) {
         try {
-          // BlockCypher free endpoint (200 req/hour)
           const res = await fetch(`https://api.blockcypher.com/v1/ltc/main/addrs/${item.address}/balance`);
           if (!res.ok) throw new Error('API error');
           const data = await res.json();
-          const balance = data.balance || 0; // satoshis
+          const balance = data.balance || 0;
           results.push({ ...item, balance });
           totalSats += balance;
         } catch (err) {
@@ -530,13 +620,12 @@
         }
       }
 
-      // get current LTC price (try from existing price elements first)
+      // Try to get LTC price
       const ltcEl = document.getElementById('ltc-price');
       if (ltcEl && ltcEl.textContent.includes('$')) {
         const match = ltcEl.textContent.match(/[\d,.]+/);
         if (match) ltcPriceUsd = parseFloat(match[0].replace(/,/g, ''));
       }
-      // fallback fetch
       if (!ltcPriceUsd) {
         try {
           const p = await fetch('https://api.coinbase.com/v2/prices/LTC-USD/spot');
@@ -562,10 +651,19 @@
             <div class="address-balance">${bal} LTC</div>
           </div>`;
       }).join('');
+
+      finishRefresh();
+    }
+
+    function finishRefresh() {
+      isRefreshing = false;
+      const refreshBtn = document.getElementById('refresh-btn');
+      refreshBtn.disabled = false;
+      refreshBtn.textContent = '↻';
     }
 
     // ======================
-    // FLOATING LOGOS + PHRASES (original)
+    // FLOATING LOGOS + PHRASES
     // ======================
     const NUM_LOGOS = 7;
     const LOGO_SRC = 'https://cryptologos.cc/logos/litecoin-ltc-logo.svg?v=030';
@@ -711,6 +809,9 @@
     createLogos();
     createPhrase();
     animate();
+    
+    // Set initial arrow states
+    document.getElementById('arrow-left').style.opacity = '0.3';
   </script>
 </body>
 </html>
