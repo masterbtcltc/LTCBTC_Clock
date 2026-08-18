@@ -14,6 +14,18 @@
     
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     
+    :root {
+      /* Look Into Litecoin inspired palette */
+      --navy: #0B2C5A;
+      --navy-dark: #071E3D;
+      --ltc-blue: #2E6B9E;
+      --ltc-blue-bright: #3B82C4;
+      --accent: #4A9BE0;
+      --white: #ffffff;
+      --off-white: #f5f7fa;
+      --text-muted: #94a3b8;
+    }
+
     html, body {
       height: 100%;
       background: #000;
@@ -29,12 +41,12 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       height: 64px;
-      background: #fff;
+      background: var(--white);
       z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 14px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.35);
     }
     .header img {
       height: 42px;
@@ -48,12 +60,12 @@
       transform: translateY(-50%);
       width: 48px;
       height: 48px;
-      background: rgba(0, 160, 255, 0.15);
-      border: 2px solid #00A0FF;
+      background: rgba(46, 107, 158, 0.18);
+      border: 2px solid var(--ltc-blue);
       border-radius: 50%;
-      color: #00A0FF;
+      color: var(--accent);
       font-size: 1.6rem;
-      display: none; /* hidden on mobile */
+      display: none;
       align-items: center;
       justify-content: center;
       cursor: pointer;
@@ -62,8 +74,8 @@
       user-select: none;
     }
     .nav-arrow:hover {
-      background: #00A0FF;
-      color: #000;
+      background: var(--ltc-blue);
+      color: white;
     }
     .nav-arrow.left { left: 18px; }
     .nav-arrow.right { right: 18px; }
@@ -103,37 +115,51 @@
       align-items: center;
       padding: 20px;
       text-align: center;
+      background: #000;
     }
     .price-line {
-      font-size: clamp(42px, 11vw, 160px);
+      /* Much more controlled sizing */
+      font-size: clamp(28px, 5.8vw, 72px);
       font-weight: 800;
-      letter-spacing: 2px;
-      margin: 8px 0;
-      color: #00A0FF;
+      letter-spacing: 1.5px;
+      margin: 6px 0;
+      color: var(--accent);
       text-transform: uppercase;
       font-variant-numeric: normal;
       font-feature-settings: "zero" off;
-      transition: all 0.3s ease;
+      transition: all 0.25s ease;
+      line-height: 1.15;
     }
-    #price-container { width: 92vw; z-index: 2; position: relative; }
+    @media (hover: hover) and (pointer: fine) {
+      .price-line:hover { 
+        font-size: clamp(30px, 6.2vw, 78px);
+        color: #6bb3f0;
+      }
+    }
+    #price-container { 
+      width: 92vw; 
+      max-width: 920px;
+      z-index: 2; 
+      position: relative; 
+    }
 
     .ltc-phrase {
       position: absolute;
       max-width: 85vw;
-      color: #00A0FF;
+      color: var(--accent);
       font-weight: 700;
-      letter-spacing: 1.5px;
-      text-shadow: 0 0 14px rgba(0,160,255,0.85);
+      letter-spacing: 1.4px;
+      text-shadow: 0 0 14px rgba(74, 155, 224, 0.7);
       opacity: 0;
       z-index: 3;
       pointer-events: none;
       line-height: 1.3;
     }
-    .ltc-logo { position: absolute; opacity: 0.05; z-index: 1; pointer-events: none; }
+    .ltc-logo { position: absolute; opacity: 0.045; z-index: 1; pointer-events: none; }
 
     /* ===== PAGE 2: PORTFOLIO ===== */
     #page-portfolio {
-      background: #000;
+      background: #05080f;
       padding: 20px 16px 50px;
       color: white;
     }
@@ -146,9 +172,9 @@
       flex-wrap: wrap;
     }
     .portfolio-header h1 {
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       font-weight: 800;
-      color: #00A0FF;
+      color: var(--accent);
       margin: 0;
     }
     .header-buttons {
@@ -156,8 +182,8 @@
       gap: 10px;
     }
     .btn {
-      background: #00A0FF;
-      color: #000;
+      background: var(--ltc-blue);
+      color: white;
       border: none;
       padding: 9px 16px;
       border-radius: 8px;
@@ -168,11 +194,16 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      transition: background 0.2s;
     }
+    .btn:hover { background: var(--ltc-blue-bright); }
     .btn-secondary {
       background: transparent;
-      border: 2px solid #00A0FF;
-      color: #00A0FF;
+      border: 2px solid var(--ltc-blue);
+      color: var(--accent);
+    }
+    .btn-secondary:hover {
+      background: rgba(46, 107, 158, 0.25);
     }
     .btn:disabled {
       opacity: 0.5;
@@ -180,8 +211,8 @@
     }
 
     .total-balance {
-      background: linear-gradient(135deg, #001a2e, #00335c);
-      border: 1px solid #00A0FF44;
+      background: linear-gradient(145deg, var(--navy-dark), var(--navy));
+      border: 1px solid rgba(74, 155, 224, 0.35);
       border-radius: 16px;
       padding: 22px;
       text-align: center;
@@ -189,23 +220,25 @@
     }
     .total-balance .label {
       font-size: 0.9rem;
-      opacity: 0.7;
+      opacity: 0.75;
       margin-bottom: 6px;
+      color: #c5d4e8;
     }
     .total-balance .amount {
-      font-size: 2.3rem;
+      font-size: 2.2rem;
       font-weight: 800;
-      color: #00A0FF;
+      color: var(--accent);
     }
     .total-balance .usd {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       opacity: 0.85;
       margin-top: 4px;
+      color: #b8cce0;
     }
     .address-list { display: flex; flex-direction: column; gap: 12px; }
     .address-card {
-      background: #0a0a0a;
-      border: 1px solid #222;
+      background: #0c1220;
+      border: 1px solid #1a2740;
       border-radius: 12px;
       padding: 16px;
       display: flex;
@@ -221,23 +254,26 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: #e2eaf5;
     }
     .address-text {
       font-size: 0.78rem;
       opacity: 0.55;
       font-family: monospace;
       word-break: break-all;
+      color: #94a3b8;
     }
     .address-balance {
       text-align: right;
       font-weight: 700;
-      color: #00A0FF;
+      color: var(--accent);
       white-space: nowrap;
     }
     .empty-state {
       text-align: center;
       padding: 60px 20px;
-      opacity: 0.6;
+      opacity: 0.65;
+      color: #94a3b8;
     }
     .empty-state p { margin-bottom: 20px; }
 
@@ -245,7 +281,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.88);
       z-index: 2000;
       display: none;
       align-items: flex-end;
@@ -253,30 +289,31 @@
     }
     .modal-overlay.open { display: flex; }
     .modal {
-      background: #111;
+      background: #0c1220;
       width: 100%;
       max-width: 480px;
       border-radius: 20px 20px 0 0;
       padding: 24px 20px 40px;
       max-height: 88vh;
       overflow-y: auto;
+      border-top: 1px solid #1e3a5f;
     }
     .modal h2 {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      color: #00A0FF;
+      font-size: 1.35rem;
+      margin-bottom: 18px;
+      color: var(--accent);
     }
     .form-group { margin-bottom: 16px; }
     .form-group label {
       display: block;
       font-size: 0.85rem;
       margin-bottom: 6px;
-      opacity: 0.8;
+      color: #94a3b8;
     }
     .form-group input {
       width: 100%;
-      background: #1a1a1a;
-      border: 1px solid #333;
+      background: #111827;
+      border: 1px solid #1e3a5f;
       color: white;
       padding: 12px 14px;
       border-radius: 8px;
@@ -285,7 +322,7 @@
     }
     .form-group input:focus {
       outline: none;
-      border-color: #00A0FF;
+      border-color: var(--ltc-blue);
     }
     .modal-actions {
       display: flex;
@@ -299,21 +336,22 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 0;
-      border-bottom: 1px solid #222;
+      border-bottom: 1px solid #1a2740;
     }
     .saved-item .info { flex: 1; min-width: 0; }
-    .saved-item .label { font-weight: 600; }
+    .saved-item .label { font-weight: 600; color: #e2eaf5; }
     .saved-item .addr {
       font-size: 0.75rem;
-      opacity: 0.5;
+      opacity: 0.55;
       font-family: monospace;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: #94a3b8;
     }
     .delete-btn {
       background: none;
       border: none;
-      color: #ff4444;
+      color: #f87171;
       font-size: 1.4rem;
       cursor: pointer;
       padding: 4px 8px;
@@ -328,11 +366,14 @@
       opacity: 0.4;
       z-index: 50;
       pointer-events: none;
+      color: #94a3b8;
     }
 
     @media (max-width: 600px) {
       .header img { height: 36px; }
-      .price-line { font-size: clamp(32px, 9vw, 68px); }
+      .price-line { 
+        font-size: clamp(24px, 7.5vw, 42px); 
+      }
     }
   </style>
 </head>
@@ -393,15 +434,14 @@
     <div class="modal">
       <h2>Portfolio Settings</h2>
       
-      <!-- Portfolio Name -->
       <div class="form-group">
         <label>Portfolio Name</label>
-        <input type="text" id="portfolio-name-input" placeholder="e.g. Cold Storage, Family Stack, etc.">
+        <input type="text" id="portfolio-name-input" placeholder="e.g. Cold Storage, Family Stack">
       </div>
 
-      <hr style="border: none; border-top: 1px solid #333; margin: 24px 0;">
+      <hr style="border: none; border-top: 1px solid #1e3a5f; margin: 24px 0;">
 
-      <h3 style="font-size: 1.1rem; margin-bottom: 14px; color: #00A0FF;">Add Address</h3>
+      <h3 style="font-size: 1.1rem; margin-bottom: 14px; color: var(--accent);">Add Address</h3>
       
       <div class="form-group">
         <label>Label (optional)</label>
@@ -435,11 +475,10 @@
     let ltcPriceUsd = 0;
     let isRefreshing = false;
 
-    // Apply saved name
     document.getElementById('portfolio-title').textContent = portfolioName;
 
     // ======================
-    // NAVIGATION (Swipe + Arrows)
+    // NAVIGATION
     // ======================
     const slider = document.getElementById('slider');
     const hint = document.getElementById('swipe-hint');
@@ -469,7 +508,6 @@
       else if (dx > 0 && currentPage === 2) goToPage(1);
     });
 
-    // Arrow buttons
     document.getElementById('arrow-left').onclick = () => {
       if (currentPage === 2) goToPage(1);
     };
@@ -482,7 +520,6 @@
       slider.className = page === 1 ? 'page-1' : 'page-2';
       hint.textContent = page === 1 ? '← Swipe for Portfolio' : 'Swipe for Clock →';
       
-      // Update arrow visibility/state
       document.getElementById('arrow-left').style.opacity = page === 1 ? '0.3' : '1';
       document.getElementById('arrow-right').style.opacity = page === 2 ? '0.3' : '1';
 
@@ -490,7 +527,7 @@
     }
 
     // ======================
-    // SETTINGS MODAL
+    // SETTINGS
     // ======================
     const modal = document.getElementById('settings-modal');
     
@@ -501,7 +538,6 @@
     };
     
     document.getElementById('close-settings').onclick = () => {
-      // Save portfolio name when closing
       const newName = document.getElementById('portfolio-name-input').value.trim() || 'My Litecoin';
       portfolioName = newName;
       localStorage.setItem(NAME_KEY, newName);
@@ -539,7 +575,7 @@
     function renderSavedList() {
       const container = document.getElementById('saved-list');
       if (addresses.length === 0) {
-        container.innerHTML = '<p style="opacity:0.5;margin-top:20px;">No addresses saved yet</p>';
+        container.innerHTML = '<p style="opacity:0.5;margin-top:20px;color:#94a3b8;">No addresses saved yet</p>';
         return;
       }
       container.innerHTML = addresses.map((a, i) => `
@@ -567,15 +603,12 @@
     }
 
     // ======================
-    // REFRESH BUTTON
+    // REFRESH
     // ======================
     document.getElementById('refresh-btn').onclick = () => {
       if (!isRefreshing) refreshBalances(true);
     };
 
-    // ======================
-    // BALANCE FETCHING
-    // ======================
     async function refreshBalances(manual = false) {
       if (isRefreshing) return;
       isRefreshing = true;
@@ -601,7 +634,7 @@
       }
 
       if (manual) {
-        list.innerHTML = '<div style="text-align:center;padding:40px;opacity:0.6">Refreshing…</div>';
+        list.innerHTML = '<div style="text-align:center;padding:40px;opacity:0.6;color:#94a3b8">Refreshing…</div>';
       }
 
       let totalSats = 0;
@@ -620,7 +653,6 @@
         }
       }
 
-      // Try to get LTC price
       const ltcEl = document.getElementById('ltc-price');
       if (ltcEl && ltcEl.textContent.includes('$')) {
         const match = ltcEl.textContent.match(/[\d,.]+/);
@@ -757,7 +789,7 @@
       if (!phraseObj) return;
       const el = phraseObj.el;
       el.textContent = randomFrom(phrases);
-      const fontSize = 18 + Math.random() * 28;
+      const fontSize = 17 + Math.random() * 26;
       el.style.fontSize = fontSize + 'px';
       const w = window.innerWidth, h = window.innerHeight - 80;
       const pw = el.offsetWidth || 200, ph = el.offsetHeight || 60;
@@ -805,12 +837,10 @@
       resetPhrase();
     });
 
-    // Init
     createLogos();
     createPhrase();
     animate();
     
-    // Set initial arrow states
     document.getElementById('arrow-left').style.opacity = '0.3';
   </script>
 </body>
